@@ -14,6 +14,7 @@ function setupSwagger<T>(app: INestApplication<T>) {
     .addServer("http://localhost:3000")
     .addTag("Health")
     .addTag("Security")
+    .addTag("Users")
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, openapiConfig);

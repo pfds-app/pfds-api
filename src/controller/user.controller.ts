@@ -1,16 +1,18 @@
-import { Controller, Get, Param, Query } from "@nestjs/common";
+import { Controller, Get, NotFoundException, Param, Query } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 import { ApiCriteria, ApiPfds, ApiPagination } from "src/docs/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { User } from "src/model";
 import { UserService } from "src/service";
+import { Authenticated } from "src/auth/decorators";
 
 @Controller()
 @ApiTags("Users")
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(private readonly userService: UserService) { }
 
   @Get("/users")
+  @Authenticated()
   @ApiPagination()
   @ApiCriteria({ name: "name", type: "string" })
   @ApiPfds({
@@ -25,11 +27,16 @@ export class UserController {
   }
 
   @Get("/users/:id")
+  @Authenticated()
   @ApiPfds({
     operationId: "getUserById",
     type: User,
   })
-  findById(@Param("id") id: string) {
-    return this.userService.findById(id);
+  async findById(@Param("id") id: string) {
+    const user = await this.userService.findById(id);
+    if (!user) {
+      throw new NotFoundException();
+    }
+    return user;
   }
 }
