@@ -5,8 +5,7 @@ import { JwtService } from "@nestjs/jwt";
 import { User } from "src/model";
 import { UserService } from "src/service";
 import { UserMapper } from "src/model/mapper";
-import { JwtPayload, Whoami } from "./types";
-import { SigninPayload, SignupPayload } from "./model";
+import { Whoami, JwtPayload, SigninPayload, SignupPayload } from "./model";
 
 @Injectable()
 export class AuthService {

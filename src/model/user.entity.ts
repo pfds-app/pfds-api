@@ -2,6 +2,7 @@ import * as bcrypt from "bcrypt";
 import { ApiProperty } from "@nestjs/swagger";
 import {
   BeforeInsert,
+  BeforeUpdate,
   Column,
   CreateDateColumn,
   Entity,
@@ -81,6 +82,15 @@ export class User {
   updatedAt: string;
 
   @BeforeInsert()
+  async hashPasswordBeforeInsert() {
+    this.hashPassword();
+  }
+
+  @BeforeUpdate()
+  async hashPasswordBeforeUpdate() {
+    this.hashPassword();
+  }
+
   async hashPassword() {
     const salt = await bcrypt.genSalt();
     this.password = await bcrypt.hash(this.password, salt);

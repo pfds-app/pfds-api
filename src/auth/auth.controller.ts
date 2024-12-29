@@ -9,8 +9,7 @@ import {
 } from "./decorators";
 import { ApiPfds } from "src/docs/decorators";
 import { User } from "src/model";
-import { Whoami } from "./types";
-import { SigninPayload, SignupPayload } from "./model";
+import { Whoami, SigninPayload, SignupPayload } from "./model";
 
 @Controller()
 @ApiTags("Security")
@@ -44,10 +43,10 @@ export class AuthController {
   }
 
   @Post("/signup")
-  @ApiBody({ type: SigninPayload })
+  @ApiBody({ type: SignupPayload })
   @ApiPfds({
     type: Whoami,
-    operationId: "signin",
+    operationId: "signup",
   })
   async signup(@Body() signupPayload: SignupPayload) {
     return this.authService.signup(signupPayload);
