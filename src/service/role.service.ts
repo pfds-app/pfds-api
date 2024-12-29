@@ -1,29 +1,25 @@
 import { Repository } from "typeorm";
 import { Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
-import { User } from "src/model";
+import { Role } from "src/model";
 import { PaginationParams } from "src/controller/decorators";
-import { Criteria, findByCriteria } from "./utils/findByCriteria";
+import { CREATED_AT_ORDER_BY, Criteria, findByCriteria } from "./utils/findByCriteria";
 
 @Injectable()
-export class UserService {
+export class RoleService {
   constructor(
-    @InjectRepository(User) private readonly repository: Repository<User>
+    @InjectRepository(Role) private readonly repository: Repository<Role>
   ) { }
 
   async findAll(pagination: PaginationParams, criteria: Criteria) {
-    return findByCriteria({ repository: this.repository, criteria, pagination });
+    return findByCriteria({ repository: this.repository, criteria, pagination, orderBy: CREATED_AT_ORDER_BY });
   }
 
   async findById(id: string) {
     return this.repository.findOneBy({ id });
   }
 
-  async saveUser(user: User) {
+  async saveRole(user: Role) {
     return this.repository.save(user);
-  }
-
-  async findByEmail(email: string) {
-    return this.repository.findOneBy({ email });
   }
 }

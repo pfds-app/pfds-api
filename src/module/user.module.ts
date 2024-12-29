@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
-import { UserController } from "../controller/user.controller";
-import { UserService } from "../service/user.service";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { User } from "src/model/user.entity";
+import { UserController } from "../controller";
+import { UserService } from "../service";
+import { User } from "src/model";
 import { BasicAuthModule } from "./basic.auth.module";
 
 @Module({
@@ -10,4 +10,4 @@ import { BasicAuthModule } from "./basic.auth.module";
   controllers: [UserController],
   providers: [UserService],
 })
-export class UserModule {}
+export class UserModule { }
