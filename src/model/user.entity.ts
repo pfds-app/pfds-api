@@ -109,11 +109,15 @@ export class User {
 
   @BeforeInsert()
   async hashPasswordBeforeInsert() {
-    this.hashPassword();
+    console.log("here");
+    await this.hashPassword();
   }
 
   async hashPassword() {
+    console.log("before password", this.password);
     const salt = await bcrypt.genSalt();
-    this.password = await bcrypt.hash(this.password, salt);
+    const password = await bcrypt.hash(this.password, salt);
+    console.log("password", password);
+    this.password = password;
   }
 }

@@ -12,11 +12,16 @@ import { Pagination, PaginationParams } from "./decorators";
 import { User } from "src/model";
 import { UserService } from "src/service";
 import { Authenticated } from "src/auth/decorators";
+import { RestUser } from "src/model/rest";
+import { UserMapper } from "src/model/mapper";
 
 @Controller()
 @ApiTags("Users")
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly userMapper: UserMapper
+  ) {}
 
   @Get("/users")
   @Authenticated()
@@ -24,13 +29,16 @@ export class UserController {
   @ApiCriteria({ name: "lastName", type: "string" })
   @ApiPfds({
     operationId: "getUsers",
-    type: [User],
+    type: [RestUser],
   })
-  findAll(
+  async findAll(
     @Pagination() pagination: PaginationParams,
     @Query("lastName") lastName?: string
   ) {
-    return this.userService.findAll(pagination, { last_name: lastName });
+    const users = await this.userService.findAll(pagination, {
+      last_name: lastName,
+    });
+    return Promise.all(users.map((user) => this.userMapper.toRest(user)));
   }
 
   @Get("/users/:id")
@@ -44,6 +52,6 @@ export class UserController {
     if (!user) {
       throw new NotFoundException();
     }
-    return user;
+    return this.userMapper.toRest(user);
   }
 }

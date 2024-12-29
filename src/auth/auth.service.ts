@@ -1,5 +1,5 @@
 import * as bcrypt from "bcrypt";
-import { Injectable } from "@nestjs/common";
+import { ForbiddenException, Injectable } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 
 import { User } from "src/model";
@@ -32,7 +32,7 @@ export class AuthService {
     const user = await this.userService.findByUsername(candidateUsername);
 
     if (!user || (await bcrypt.compare(candidatePassword, user.password))) {
-      throw new Error("Invalid credentials");
+      throw new ForbiddenException("Invalid credentials");
     }
 
     return this.domainUserToWhoami(user);

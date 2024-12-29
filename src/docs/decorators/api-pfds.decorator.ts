@@ -22,6 +22,8 @@ class ApiResponseError {
   private statusCode: number;
   @ApiProperty()
   private message: string;
+  @ApiProperty()
+  private error: string;
 }
 
 export function ApiPfds({

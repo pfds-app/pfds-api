@@ -19,7 +19,6 @@ export class RoleController {
   constructor(private readonly roleService: RoleService) {}
 
   @Get("/roles")
-  @Authenticated()
   @ApiPagination()
   @ApiCriteria({ name: "name", type: "string" })
   @ApiPfds({
