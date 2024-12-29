@@ -1,5 +1,12 @@
-import { Controller, Get, NotFoundException, Param, Query } from "@nestjs/common";
+import {
+  Controller,
+  Get,
+  NotFoundException,
+  Param,
+  Query,
+} from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
+
 import { ApiCriteria, ApiPfds, ApiPagination } from "src/docs/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { User } from "src/model";
@@ -9,7 +16,7 @@ import { Authenticated } from "src/auth/decorators";
 @Controller()
 @ApiTags("Users")
 export class UserController {
-  constructor(private readonly userService: UserService) { }
+  constructor(private readonly userService: UserService) {}
 
   @Get("/users")
   @Authenticated()

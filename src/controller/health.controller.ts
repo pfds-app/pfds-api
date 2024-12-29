@@ -1,10 +1,10 @@
 import { Controller, Get } from "@nestjs/common";
 import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
+
 import { Dummy } from "src/model";
 import { HealthService } from "src/service";
-import { ApiPfds } from "../docs/decorators";
+import { ApiPfds, ApiPagination } from "../docs/decorators";
 import { Pagination, PaginationParams } from "./decorators";
-import { ApiPagination } from "src/docs/decorators";
 import { Authenticated } from "src/auth/decorators";
 
 @Controller()

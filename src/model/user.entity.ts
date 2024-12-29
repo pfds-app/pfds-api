@@ -1,9 +1,17 @@
+import * as bcrypt from "bcrypt";
 import { ApiProperty } from "@nestjs/swagger";
-import { Column, CreateDateColumn, Entity, PrimaryColumn, UpdateDateColumn } from "typeorm";
+import {
+  BeforeInsert,
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryColumn,
+  UpdateDateColumn,
+} from "typeorm";
 
 export enum UserGender {
   MALE = "MALE",
-  FEMALE = "FEMALE"
+  FEMALE = "FEMALE",
 }
 
 @Entity()
@@ -15,6 +23,10 @@ export class User {
   @Column({ unique: true })
   @ApiProperty()
   email: string;
+
+  @Column({ unique: true })
+  @ApiProperty()
+  username: string;
 
   @Column({ name: "first_name" })
   @ApiProperty()
@@ -48,11 +60,29 @@ export class User {
   @ApiProperty({ required: false })
   apv?: string;
 
-  @CreateDateColumn({ name: "created_at", type: "timestamp without time zone", default: () => "CURRENT_TIMESTAMP" })
+  @Column()
+  password: string;
+
+  @CreateDateColumn({
+    name: "created_at",
+    type: "timestamp without time zone",
+    default: () => "CURRENT_TIMESTAMP",
+  })
   @ApiProperty({ format: "date" })
   createdAt: string;
 
-  @UpdateDateColumn({ name: "updated_at", type: "timestamp without time zone", default: () => "CURRENT_TIMESTAMP", onUpdate: "CURRENT_TIMESTAMP" })
+  @UpdateDateColumn({
+    name: "updated_at",
+    type: "timestamp without time zone",
+    default: () => "CURRENT_TIMESTAMP",
+    onUpdate: "CURRENT_TIMESTAMP",
+  })
   @ApiProperty({ format: "date" })
   updatedAt: string;
-};
+
+  @BeforeInsert()
+  async hashPassword() {
+    const salt = await bcrypt.genSalt();
+    this.password = await bcrypt.hash(this.password, salt);
+  }
+}

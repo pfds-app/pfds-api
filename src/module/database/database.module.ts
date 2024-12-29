@@ -1,6 +1,7 @@
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
+
 import { Dummy, Role, User } from "src/model";
 
 @Module({
@@ -18,4 +19,4 @@ import { Dummy, Role, User } from "src/model";
     }),
   ],
 })
-export class DatabaseModule { }
+export class DatabaseModule {}

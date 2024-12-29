@@ -1,9 +1,10 @@
 import { Module } from "@nestjs/common";
+
 import { DatabaseModule } from "./module/database";
 import { AuthModule } from "./auth";
-import { BasicAuthModule, HealthModule, RoleModule, UserModule } from "./module";
+import { HealthModule, RoleModule, UserModule } from "./module";
 
 @Module({
-  imports: [DatabaseModule, BasicAuthModule, AuthModule, HealthModule, RoleModule, UserModule],
+  imports: [DatabaseModule, HealthModule, RoleModule, UserModule, AuthModule],
 })
-export class PfdsModule { }
+export class PfdsModule {}

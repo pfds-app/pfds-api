@@ -1,12 +1,13 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
+
 import { HealthController } from "src/controller";
 import { HealthService } from "src/service";
 import { Dummy } from "src/model";
-import { BasicAuthModule } from "./basic.auth.module";
+import { AuthModule } from "src/auth";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Dummy]), BasicAuthModule],
+  imports: [AuthModule, TypeOrmModule.forFeature([Dummy])],
   providers: [HealthService],
   controllers: [HealthController],
 })
