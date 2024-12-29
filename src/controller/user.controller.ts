@@ -14,16 +14,16 @@ export class UserController {
   @Get("/users")
   @Authenticated()
   @ApiPagination()
-  @ApiCriteria({ name: "name", type: "string" })
+  @ApiCriteria({ name: "lastName", type: "string" })
   @ApiPfds({
     operationId: "getUsers",
     type: [User],
   })
   findAll(
     @Pagination() pagination: PaginationParams,
-    @Query("name") name?: string
+    @Query("lastName") lastName?: string
   ) {
-    return this.userService.findAll(pagination, { name });
+    return this.userService.findAll(pagination, { last_name: lastName });
   }
 
   @Get("/users/:id")

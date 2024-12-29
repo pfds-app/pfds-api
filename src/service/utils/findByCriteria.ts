@@ -6,17 +6,21 @@ export type Criteria = Record<string, any>;
 export type OrderByType = { sort: string; order: OrderValue }
 export type OrderValue = "DESC" | "ASC";
 
+export const UPDATED_AT_CREATED_AT_ORDER_BY: OrderByType[] = [
+  {
+    order: "DESC",
+    sort: "updated_at"
+  }, {
+    order: "DESC",
+    sort: "created_at"
+  }
+]
 
-export const CREATED_AT_ORDER_BY: OrderByType = {
-  order: "DESC",
-  sort: "created_at"
-}
-
-export const findByCriteria = async <T>({ orderBy, repository, criteria, pagination }: {
+export const findByCriteria = async <T>({ orderBy = [], repository, criteria, pagination }: {
   repository: Repository<T>,
   criteria: Criteria,
   pagination: PaginationParams,
-  orderBy?: OrderByType
+  orderBy?: OrderByType[]
 }) => {
   const queryBuilder = repository.createQueryBuilder();
   const { skip, take } = createPagination(pagination);
@@ -26,9 +30,9 @@ export const findByCriteria = async <T>({ orderBy, repository, criteria, paginat
     queryBuilder.andWhere(`${key} ilike '%${value}%'`);
   });
 
-  if (orderBy) {
-    queryBuilder.addOrderBy(orderBy.sort, orderBy.order, "NULLS LAST");
-  }
+  orderBy.forEach(orderByValue => {
+    queryBuilder.addOrderBy(orderByValue.sort, orderByValue.order, "NULLS LAST");
+  });
 
   return queryBuilder.skip(skip).take(take).getMany();
 };
