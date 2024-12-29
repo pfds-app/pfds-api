@@ -21,6 +21,7 @@ import { UserMapper } from "src/model/mapper";
         return {
           secret: configService.get("JWT_SECRET"),
           signOptions: {
+            // 5m | 5h | 5d
             expiresIn: "5h",
           },
         };

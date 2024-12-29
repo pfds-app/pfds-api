@@ -13,7 +13,8 @@ export class JwtAuthGuard extends AuthGuard("jwt") {
     return super.canActivate(context);
   }
 
-  // utils for whoami
+  // THERE IS NO VERIFICATION OF THE TOKEN HERE AS IT IS ALREADY DONE IN THE
+  // SUPER CAN_ACTIVATE, THIS FUNCTION IS ONLY A UTIL FOR GET_WHOAMI
   extractTokenWithoutVerification(req: Request) {
     const authHeader = req.headers["authorization"] ?? "";
     return authHeader.split(" ")[1];
