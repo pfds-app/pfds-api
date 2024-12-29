@@ -1,4 +1,5 @@
 import { ApiProperty } from "@nestjs/swagger";
+import { IsDateString, IsString, IsUUID } from "class-validator";
 import {
   Column,
   CreateDateColumn,
@@ -9,14 +10,17 @@ import {
 
 @Entity()
 export class Role {
+  @IsUUID()
   @PrimaryColumn()
   @ApiProperty({ format: "uuid" })
   id: string;
 
+  @IsString()
   @Column()
   @ApiProperty()
   name: string;
 
+  @IsDateString()
   @CreateDateColumn({
     name: "created_at",
     type: "timestamp without time zone",
@@ -25,6 +29,7 @@ export class Role {
   @ApiProperty({ format: "date" })
   createdAt: string;
 
+  @IsDateString()
   @UpdateDateColumn({
     name: "updated_at",
     type: "timestamp without time zone",
