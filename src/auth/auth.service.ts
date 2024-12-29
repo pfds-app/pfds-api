@@ -6,6 +6,7 @@ import { User } from "src/model";
 import { UserService } from "src/service";
 import { UserMapper } from "src/model/mapper";
 import { JwtPayload, Whoami } from "./types";
+import { SigninPayload, SignupPayload } from "./model";
 
 @Injectable()
 export class AuthService {
@@ -20,15 +21,15 @@ export class AuthService {
     return { ...restUser, token };
   }
 
-  async signup(user: User): Promise<Whoami> {
-    const savedUser = await this.userService.createUser(user);
+  async signup(signupPayload: SignupPayload): Promise<Whoami> {
+    const savedUser = await this.userService.createUser(signupPayload);
     return this.domainUserToWhoami(savedUser);
   }
 
-  async signin(
-    candidateUsername: string,
-    candidatePassword: string
-  ): Promise<Whoami> {
+  async signin({
+    username: candidateUsername,
+    password: candidatePassword,
+  }: SigninPayload): Promise<Whoami> {
     const user = await this.userService.findByUsername(candidateUsername);
 
     if (!user || (await bcrypt.compare(candidatePassword, user.password))) {

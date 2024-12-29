@@ -1,6 +1,6 @@
 import { UserGender } from "../user.entity";
 
-export type RestUser = {
+export class RestUser {
   id: string;
   email: string;
   username: string;
@@ -13,4 +13,4 @@ export type RestUser = {
   apv?: string;
   createdAt: string;
   updatedAt: string;
-};
+}
