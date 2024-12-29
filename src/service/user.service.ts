@@ -34,7 +34,8 @@ export class UserService {
       throw new BadRequestException("User with the given id already exist");
     }
 
-    return this.repository.save(user);
+    const createdUser = this.repository.create(user);
+    return this.repository.save(createdUser);
   }
 
   async findByEmail(email: string) {

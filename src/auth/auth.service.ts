@@ -30,8 +30,15 @@ export class AuthService {
     password: candidatePassword,
   }: SigninPayload): Promise<Whoami> {
     const user = await this.userService.findByUsername(candidateUsername);
+    if (!user) {
+      throw new ForbiddenException("Invalid credentials");
+    }
 
-    if (!user || (await bcrypt.compare(candidatePassword, user.password))) {
+    const isCorrectPassword = await bcrypt.compare(
+      candidatePassword,
+      user.password
+    );
+    if (!isCorrectPassword) {
       throw new ForbiddenException("Invalid credentials");
     }
 
