@@ -5,10 +5,12 @@ import { UserService } from "../service";
 import { User } from "src/model";
 import { UserMapper } from "src/model/mapper";
 import { AuthModule } from "src/auth";
+import { RoleModule } from "./role.module";
 
 @Module({
-  imports: [AuthModule, TypeOrmModule.forFeature([User])],
+  imports: [RoleModule, AuthModule, TypeOrmModule.forFeature([User])],
   controllers: [UserController],
   providers: [UserService, UserMapper],
+  exports: [UserService, UserMapper],
 })
 export class UserModule {}

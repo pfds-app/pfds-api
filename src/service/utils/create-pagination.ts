@@ -4,7 +4,7 @@ import { PaginationParams } from "src/controller/decorators";
 
 export function createPagination(
   pagination: PaginationParams
-): FindManyOptions {
+): Pick<FindManyOptions, "take" | "skip"> {
   return {
     take: pagination.pageSize,
     skip: (pagination.page - 1) * pagination.pageSize,

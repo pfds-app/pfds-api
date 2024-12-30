@@ -9,7 +9,6 @@ import { ApiTags } from "@nestjs/swagger";
 
 import { ApiCriteria, ApiPfds, ApiPagination } from "src/docs/decorators";
 import { Pagination, PaginationParams } from "./decorators";
-import { User } from "src/model";
 import { UserService } from "src/service";
 import { Authenticated } from "src/auth/decorators";
 import { RestUser } from "src/model/rest";
@@ -36,7 +35,7 @@ export class UserController {
     @Query("lastName") lastName?: string
   ) {
     const users = await this.userService.findAll(pagination, {
-      last_name: lastName,
+      lastName,
     });
     return Promise.all(users.map((user) => this.userMapper.toRest(user)));
   }
@@ -45,7 +44,7 @@ export class UserController {
   @Authenticated()
   @ApiPfds({
     operationId: "getUserById",
-    type: User,
+    type: RestUser,
   })
   async findById(@Param("id") id: string) {
     const user = await this.userService.findById(id);

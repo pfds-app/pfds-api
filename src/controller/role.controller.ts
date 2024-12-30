@@ -20,6 +20,7 @@ export class RoleController {
 
   @Get("/roles")
   @ApiPagination()
+  @Authenticated()
   @ApiCriteria({ name: "name", type: "string" })
   @ApiPfds({
     operationId: "getRoles",

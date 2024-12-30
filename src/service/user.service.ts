@@ -4,11 +4,9 @@ import { InjectRepository } from "@nestjs/typeorm";
 
 import { User } from "src/model";
 import { PaginationParams } from "src/controller/decorators";
-import {
-  Criteria,
-  findByCriteria,
-  UPDATED_AT_CREATED_AT_ORDER_BY,
-} from "./utils/findByCriteria";
+import { Criteria } from "./utils/criteria";
+import { UPDATED_AT_CREATED_AT_ORDER_BY } from "./utils/default-order-by";
+import { findByCriteria } from "./utils/find-by-cireria";
 
 @Injectable()
 export class UserService {
@@ -16,12 +14,12 @@ export class UserService {
     @InjectRepository(User) private readonly repository: Repository<User>
   ) {}
 
-  async findAll(pagination: PaginationParams, criteria: Criteria) {
-    return findByCriteria({
+  async findAll(pagination: PaginationParams, criteria: Criteria<User>) {
+    return findByCriteria<User>({
       repository: this.repository,
       criteria,
       pagination,
-      orderBy: UPDATED_AT_CREATED_AT_ORDER_BY,
+      order: UPDATED_AT_CREATED_AT_ORDER_BY,
     });
   }
 

@@ -21,7 +21,8 @@ export class AuthService {
   }
 
   async signup(signupPayload: SignupPayload): Promise<Whoami> {
-    const savedUser = await this.userService.createUser(signupPayload);
+    const user = await this.userMapper.createToDomain(signupPayload);
+    const savedUser = await this.userService.createUser(user);
     return this.domainUserToWhoami(savedUser);
   }
 

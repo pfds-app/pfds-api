@@ -8,8 +8,8 @@ import { AuthService } from "./auth.service";
 import { AuthController } from "./auth.controller";
 import { JwtStrategy } from "./startegy";
 import { JwtAuthGuard } from "./guards";
-import { User } from "src/model";
-import { UserService } from "src/service";
+import { Role, User } from "src/model";
+import { RoleService, UserService } from "src/service";
 import { UserMapper } from "src/model/mapper";
 
 @Module({
@@ -27,14 +27,14 @@ import { UserMapper } from "src/model/mapper";
         };
       },
     }),
-    TypeOrmModule.forFeature([User]),
+    TypeOrmModule.forFeature([Role, User]),
   ],
   providers: [
-    UserService,
-    UserMapper,
     JwtAuthGuard,
     JwtStrategy,
     AuthService,
+    RoleService,
+    UserMapper,
     UserService,
   ],
   controllers: [AuthController],

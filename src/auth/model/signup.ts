@@ -1,10 +1,3 @@
-import { ApiProperty } from "@nestjs/swagger";
-import { IsString, MinLength } from "class-validator";
-import { User } from "src/model";
+import { CreateUser } from "src/model/rest";
 
-export class SignupPayload extends User {
-  @IsString()
-  @MinLength(8)
-  @ApiProperty()
-  password: string;
-}
+export class SignupPayload extends CreateUser {}
