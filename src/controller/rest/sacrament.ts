@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsDateString, IsString, IsUUID } from "class-validator";
 
-export class Role {
+export class Sacrament {
   @IsUUID()
   @ApiProperty({ format: "uuid" })
   id: string;
@@ -11,10 +11,10 @@ export class Role {
   name: string;
 
   @IsDateString()
-  @ApiProperty({ format: "date" })
+  @ApiProperty({ format: "date-time" })
   createdAt: string;
 
   @IsDateString()
-  @ApiProperty({ format: "date" })
+  @ApiProperty({ format: "date-time" })
   updatedAt: string;
 }

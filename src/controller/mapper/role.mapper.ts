@@ -8,13 +8,14 @@ import { Role } from "../rest";
 @Injectable()
 export class RoleMapper {
   constructor(
-    @InjectRepository(EntityRole) private readonly roleRepository: Repository<EntityRole>
-  ) { }
+    @InjectRepository(EntityRole)
+    private readonly roleRepository: Repository<EntityRole>
+  ) {}
 
   async toRest(role: EntityRole): Promise<Role> {
     return {
-      ...role
-    }
+      ...role,
+    };
   }
 
   async toDomain(role: Role): Promise<EntityRole> {

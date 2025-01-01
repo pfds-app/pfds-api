@@ -1,20 +1,21 @@
 import { NestFactory } from "@nestjs/core";
 import { INestApplication, ValidationPipe } from "@nestjs/common";
 import { DocumentBuilder, SwaggerModule } from "@nestjs/swagger";
-import { PfdsModule } from "./pfds.module";
+import { JfdsModule } from "./jfds.module";
 import { config } from "dotenv";
 
 config();
 
 function setupSwagger<T>(app: INestApplication<T>) {
   const openapiConfig = new DocumentBuilder()
-    .setTitle("Pfds Api")
-    .setDescription("Pfds")
+    .setTitle("Jfds Api")
+    .setDescription("Jfds")
     .setVersion("0.0.1")
     .addServer("http://localhost:3000")
     .addTag("Health")
-    .addTag("Security")
     .addTag("Users")
+    .addTag("Security")
+    .addTag("Resources")
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, openapiConfig);
@@ -22,7 +23,7 @@ function setupSwagger<T>(app: INestApplication<T>) {
 }
 
 async function bootstrap() {
-  const app = await NestFactory.create(PfdsModule, {
+  const app = await NestFactory.create(JfdsModule, {
     logger: ["error", "warn", "log", "verbose", "fatal"],
   });
   setupSwagger(app);

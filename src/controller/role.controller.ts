@@ -1,41 +1,49 @@
 import {
+  Body,
   Controller,
+  Delete,
   Get,
   NotFoundException,
   Param,
+  Put,
   Query,
 } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiTags } from "@nestjs/swagger";
 
-import { ApiCriteria, ApiPfds, ApiPagination } from "src/docs/decorators";
+import { ApiCriteria, ApiJfds, ApiPagination } from "src/docs/decorators";
 import { RoleService } from "src/service";
 import { Authenticated } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { Role } from "./rest";
+import { RoleMapper } from "./mapper";
 
 @Controller()
 @ApiTags("Users")
 export class RoleController {
-  constructor(private readonly roleService: RoleService) { }
+  constructor(
+    private readonly roleService: RoleService,
+    private readonly roleMapper: RoleMapper
+  ) {}
 
   @Get("/roles")
   @ApiPagination()
   @Authenticated()
   @ApiCriteria({ name: "name", type: "string" })
-  @ApiPfds({
+  @ApiJfds({
     operationId: "getRoles",
     type: [Role],
   })
-  findAll(
+  async findAll(
     @Pagination() pagination: PaginationParams,
     @Query("name") name?: string
   ) {
-    return this.roleService.findAll(pagination, { name });
+    const roles = await this.roleService.findAll(pagination, { name });
+    return Promise.all(roles.map((role) => this.roleMapper.toRest(role)));
   }
 
   @Get("/roles/:id")
   @Authenticated()
-  @ApiPfds({
+  @ApiJfds({
     operationId: "getRoleById",
     type: Role,
   })
@@ -44,6 +52,32 @@ export class RoleController {
     if (!role) {
       throw new NotFoundException();
     }
-    return role;
+    return this.roleMapper.toRest(role);
+  }
+
+  @Put("/roles")
+  @Authenticated()
+  @ApiBody({ type: [Role] })
+  @ApiJfds({
+    operationId: "crupdateRoles",
+    type: [Role],
+  })
+  async crupdateRoles(@Body() roles: Role[]) {
+    const mapped = await Promise.all(
+      roles.map((role) => this.roleMapper.toDomain(role))
+    );
+    const savedRoles = await this.roleService.saveRoles(mapped);
+    return Promise.all(savedRoles.map((role) => this.roleMapper.toRest(role)));
+  }
+
+  @Delete("/roles/:id")
+  @Authenticated()
+  @ApiJfds({
+    operationId: "deleteRoleById",
+    type: Role,
+  })
+  async deleteRoleById(@Param("id") id: string) {
+    const deletedRole = await this.roleService.deleteById(id);
+    return this.roleMapper.toRest(deletedRole);
   }
 }

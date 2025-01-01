@@ -7,7 +7,7 @@ import {
   AuthenticatedUser,
   AuthenticatedUserToken,
 } from "./decorators";
-import { ApiPfds } from "src/docs/decorators";
+import { ApiJfds } from "src/docs/decorators";
 import { User } from "src/model";
 import { Whoami, SigninPayload, SignupPayload } from "./model";
 
@@ -18,7 +18,7 @@ export class AuthController {
 
   @Get("/whoami")
   @Authenticated()
-  @ApiPfds({
+  @ApiJfds({
     type: Whoami,
     operationId: "whoami",
     operationOptions: {
@@ -34,7 +34,7 @@ export class AuthController {
 
   @Post("/signin")
   @ApiBody({ type: SigninPayload })
-  @ApiPfds({
+  @ApiJfds({
     type: Whoami,
     operationId: "signin",
   })
@@ -44,7 +44,7 @@ export class AuthController {
 
   @Post("/signup")
   @ApiBody({ type: SignupPayload })
-  @ApiPfds({
+  @ApiJfds({
     type: Whoami,
     operationId: "signup",
   })

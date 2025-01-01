@@ -11,7 +11,7 @@ import {
   ApiOperationOptions,
 } from "@nestjs/swagger";
 
-type ApiPfdsOptions = {
+type ApiJfdsOptions = {
   operationId: string;
   type: ApiResponseMetadata["type"];
   operationOptions?: ApiOperationOptions;
@@ -26,11 +26,11 @@ class ApiResponseError {
   private error: string;
 }
 
-export function ApiPfds({
+export function ApiJfds({
   operationId,
   type,
   operationOptions = {},
-}: ApiPfdsOptions) {
+}: ApiJfdsOptions) {
   return applyDecorators(
     ApiOperation({ ...operationOptions, operationId }),
     ApiOkResponse({ type }),

@@ -3,7 +3,7 @@ import { ApiOkResponse, ApiOperation, ApiTags } from "@nestjs/swagger";
 
 import { Dummy } from "src/model";
 import { HealthService } from "src/service";
-import { ApiPfds, ApiPagination } from "../docs/decorators";
+import { ApiJfds, ApiPagination } from "../docs/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { Authenticated } from "src/auth/decorators";
 
@@ -31,7 +31,7 @@ export class HealthController {
 
   @Get("/dummies")
   @ApiPagination()
-  @ApiPfds({ operationId: "getDummies", type: [Dummy] })
+  @ApiJfds({ operationId: "getDummies", type: [Dummy] })
   async getDummies(
     @Pagination() pagination: PaginationParams
   ): Promise<Dummy[]> {
@@ -41,7 +41,7 @@ export class HealthController {
   @Get("/dummies/private")
   @Authenticated()
   @ApiPagination()
-  @ApiPfds({ operationId: "getPrivateDummies", type: [Dummy] })
+  @ApiJfds({ operationId: "getPrivateDummies", type: [Dummy] })
   async getPrivateDummies(@Pagination() pagination: PaginationParams) {
     return this.healthService.getDummies(pagination);
   }

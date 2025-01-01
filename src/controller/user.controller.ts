@@ -7,7 +7,7 @@ import {
 } from "@nestjs/common";
 import { ApiTags } from "@nestjs/swagger";
 
-import { ApiCriteria, ApiPfds, ApiPagination } from "src/docs/decorators";
+import { ApiCriteria, ApiJfds, ApiPagination } from "src/docs/decorators";
 import { UserService } from "src/service";
 import { Authenticated } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";
@@ -20,13 +20,13 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly userMapper: UserMapper
-  ) { }
+  ) {}
 
   @Get("/users")
   @Authenticated()
   @ApiPagination()
   @ApiCriteria({ name: "lastName", type: "string" })
-  @ApiPfds({
+  @ApiJfds({
     operationId: "getUsers",
     type: [User],
   })
@@ -42,7 +42,7 @@ export class UserController {
 
   @Get("/users/:id")
   @Authenticated()
-  @ApiPfds({
+  @ApiJfds({
     operationId: "getUserById",
     type: User,
   })

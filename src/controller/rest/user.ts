@@ -37,10 +37,10 @@ export class User {
   @ApiProperty({ required: false })
   apv?: string;
 
-  @ApiProperty({ format: "date" })
+  @ApiProperty({ format: "date-time" })
   createdAt: string;
 
-  @ApiProperty({ format: "date" })
+  @ApiProperty({ format: "date-time" })
   updatedAt: string;
 
   @ApiProperty({ type: Role })

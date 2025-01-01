@@ -2,7 +2,7 @@ import { ConfigService } from "@nestjs/config";
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
-import { Dummy, Role, User } from "src/model";
+import { Dummy, Role, Sacrament, User } from "src/model";
 
 @Module({
   imports: [
@@ -11,7 +11,7 @@ import { Dummy, Role, User } from "src/model";
       useFactory: (configService: ConfigService) => ({
         type: "postgres",
         url: configService.get("DATABASE_URL"),
-        entities: [Dummy, User, Role],
+        entities: [Dummy, User, Role, Sacrament],
         //WARNING: remove synchronize on prod
         synchronize: true,
       }),

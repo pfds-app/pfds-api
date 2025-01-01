@@ -11,10 +11,10 @@ export class Role {
   name: string;
 
   @IsDateString()
-  @ApiProperty({ format: "date" })
+  @ApiProperty({ format: "date-time" })
   createdAt: string;
 
   @IsDateString()
-  @ApiProperty({ format: "date" })
+  @ApiProperty({ format: "date-time" })
   updatedAt: string;
 }

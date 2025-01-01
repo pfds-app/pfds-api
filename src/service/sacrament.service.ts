@@ -2,20 +2,21 @@ import { Repository } from "typeorm";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 
-import { Role } from "src/model";
+import { Sacrament } from "src/model";
 import { PaginationParams } from "src/controller/decorators";
-import { Criteria } from "./utils/criteria";
 import { findByCriteria } from "./utils/find-by-cireria";
 import { UPDATED_AT_CREATED_AT_ORDER_BY } from "./utils/default-order-by";
+import { Criteria } from "./utils/criteria";
 
 @Injectable()
-export class RoleService {
+export class SacramentService {
   constructor(
-    @InjectRepository(Role) private readonly repository: Repository<Role>
+    @InjectRepository(Sacrament)
+    private readonly repository: Repository<Sacrament>
   ) {}
 
-  async findAll(pagination: PaginationParams, criteria: Criteria<Role>) {
-    return findByCriteria<Role>({
+  async findAll(pagination: PaginationParams, criteria: Criteria<Sacrament>) {
+    return findByCriteria<Sacrament>({
       repository: this.repository,
       criteria,
       pagination,
@@ -27,14 +28,16 @@ export class RoleService {
     return this.repository.findOneBy({ id });
   }
 
-  async saveRoles(roles: Role[]) {
-    return this.repository.save(roles);
+  async saveSacraments(sacraments: Sacrament[]) {
+    return this.repository.save(sacraments);
   }
 
   async deleteById(id: string) {
     const toDelete = await this.findById(id);
     if (!toDelete) {
-      throw new BadRequestException("No Role with id = " + id + " was found");
+      throw new BadRequestException(
+        "No Sacrament with id = " + id + " was found"
+      );
     }
     await this.repository.delete({ id });
     return toDelete;

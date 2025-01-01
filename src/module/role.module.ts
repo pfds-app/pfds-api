@@ -12,4 +12,4 @@ import { RoleService } from "src/service";
   providers: [RoleService, RoleMapper],
   exports: [RoleService, RoleMapper],
 })
-export class RoleModule { }
+export class RoleModule {}

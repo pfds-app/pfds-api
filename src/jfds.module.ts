@@ -3,7 +3,12 @@ import { ConfigModule } from "@nestjs/config";
 
 import { DatabaseModule } from "./module/database";
 import { AuthModule } from "./auth";
-import { HealthModule, RoleModule, UserModule } from "./module";
+import {
+  HealthModule,
+  RoleModule,
+  UserModule,
+  SacramentModule,
+} from "./module";
 
 @Module({
   imports: [
@@ -15,6 +20,7 @@ import { HealthModule, RoleModule, UserModule } from "./module";
     RoleModule,
     UserModule,
     AuthModule,
+    SacramentModule,
   ],
 })
-export class PfdsModule {}
+export class JfdsModule {}

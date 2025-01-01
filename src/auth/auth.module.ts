@@ -40,4 +40,4 @@ import { RoleMapper, UserMapper } from "src/controller/mapper";
   ],
   controllers: [AuthController],
 })
-export class AuthModule { }
+export class AuthModule {}

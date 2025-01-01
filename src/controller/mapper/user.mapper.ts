@@ -12,8 +12,9 @@ export class UserMapper {
   constructor(
     private readonly roleService: RoleService,
     private readonly roleMapper: RoleMapper,
-    @InjectRepository(EntityUser) private readonly userRepository: Repository<EntityUser>
-  ) { }
+    @InjectRepository(EntityUser)
+    private readonly userRepository: Repository<EntityUser>
+  ) {}
 
   async toRest(user: EntityUser): Promise<User> {
     const copiedEntityUser = { ...user };
@@ -21,12 +22,18 @@ export class UserMapper {
     return copiedEntityUser;
   }
 
-  async updateToDomain({ roleId, id, ...baseEntityUser }: UpdateUser): Promise<EntityUser> {
+  async updateToDomain({
+    roleId,
+    id,
+    ...baseEntityUser
+  }: UpdateUser): Promise<EntityUser> {
     const beforeUpdateEntityUser = await this.userRepository.findOneBy({ id });
     const role = await this.roleService.findById(roleId);
 
     if (!beforeUpdateEntityUser) {
-      throw new BadRequestException("EntityUser with id=" + id + " does not exist");
+      throw new BadRequestException(
+        "EntityUser with id=" + id + " does not exist"
+      );
     }
 
     if (!role) {
@@ -43,7 +50,10 @@ export class UserMapper {
     });
   }
 
-  async createToDomain({ roleId, ...baseEntityUser }: CreateUser): Promise<EntityUser> {
+  async createToDomain({
+    roleId,
+    ...baseEntityUser
+  }: CreateUser): Promise<EntityUser> {
     const role = await this.roleService.findById(roleId);
     if (!role) {
       throw new BadRequestException(
