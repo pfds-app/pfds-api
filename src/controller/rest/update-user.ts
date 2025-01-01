@@ -8,7 +8,7 @@ import {
   IsUUID,
 } from "class-validator";
 
-import { UserGender } from "../user.entity";
+import { UserGender } from "src/model";
 
 export class UpdateUser {
   @IsUUID()

@@ -1,7 +1,7 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { RestUser } from "src/model/rest";
+import { User } from "src/controller/rest";
 
-export class Whoami extends RestUser {
+export class Whoami extends User {
   @ApiProperty()
   token: string;
 }

@@ -10,7 +10,7 @@ import { JwtStrategy } from "./startegy";
 import { JwtAuthGuard } from "./guards";
 import { Role, User } from "src/model";
 import { RoleService, UserService } from "src/service";
-import { UserMapper } from "src/model/mapper";
+import { RoleMapper, UserMapper } from "src/controller/mapper";
 
 @Module({
   imports: [
@@ -34,9 +34,10 @@ import { UserMapper } from "src/model/mapper";
     JwtStrategy,
     AuthService,
     RoleService,
+    RoleMapper,
     UserMapper,
     UserService,
   ],
   controllers: [AuthController],
 })
-export class AuthModule {}
+export class AuthModule { }

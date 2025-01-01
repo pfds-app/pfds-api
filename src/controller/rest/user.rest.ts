@@ -1,9 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-import { UserGender } from "../user.entity";
-import { Role } from "../role.entity";
+import { UserGender } from "src/model";
+import { Role } from "./role";
 
-export class RestUser {
+export class User {
   @ApiProperty({ format: "uuid" })
   id: string;
 

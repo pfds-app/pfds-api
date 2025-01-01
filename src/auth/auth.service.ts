@@ -4,7 +4,7 @@ import { JwtService } from "@nestjs/jwt";
 
 import { User } from "src/model";
 import { UserService } from "src/service";
-import { UserMapper } from "src/model/mapper";
+import { UserMapper } from "src/controller/mapper";
 import { Whoami, JwtPayload, SigninPayload, SignupPayload } from "./model";
 
 @Injectable()
@@ -13,7 +13,7 @@ export class AuthService {
     private readonly userService: UserService,
     private readonly userMapper: UserMapper,
     private readonly jwtService: JwtService
-  ) {}
+  ) { }
 
   async whoami(token: string, user: User): Promise<Whoami> {
     const restUser = await this.userMapper.toRest(user);

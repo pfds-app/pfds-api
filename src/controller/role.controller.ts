@@ -8,15 +8,15 @@ import {
 import { ApiTags } from "@nestjs/swagger";
 
 import { ApiCriteria, ApiPfds, ApiPagination } from "src/docs/decorators";
-import { Pagination, PaginationParams } from "./decorators";
-import { Role } from "src/model";
 import { RoleService } from "src/service";
 import { Authenticated } from "src/auth/decorators";
+import { Pagination, PaginationParams } from "./decorators";
+import { Role } from "./rest";
 
 @Controller()
 @ApiTags("Users")
 export class RoleController {
-  constructor(private readonly roleService: RoleService) {}
+  constructor(private readonly roleService: RoleService) { }
 
   @Get("/roles")
   @ApiPagination()
