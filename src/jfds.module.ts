@@ -8,6 +8,7 @@ import {
   RoleModule,
   UserModule,
   SacramentModule,
+  RegionModule,
 } from "./module";
 
 @Module({
@@ -21,6 +22,7 @@ import {
     UserModule,
     AuthModule,
     SacramentModule,
+    RegionModule,
   ],
 })
 export class JfdsModule {}
