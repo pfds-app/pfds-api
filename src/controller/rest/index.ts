@@ -5,3 +5,4 @@ export * from "./role";
 export * from "./sacrament";
 export * from "./region";
 export * from "./committee";
+export * from "./association";
