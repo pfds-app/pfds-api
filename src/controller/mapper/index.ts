@@ -5,3 +5,4 @@ export * from "./region.mapper";
 export * from "./committee.mapper";
 export * from "./association.mapper";
 export * from "./responsability.mapper";
+export * from "./event.mapper";

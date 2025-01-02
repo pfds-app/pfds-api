@@ -12,6 +12,7 @@ import {
   CommitteeModule,
   AssociationModule,
   ResponsabilityModule,
+  EventModule,
 } from "./module";
 
 @Module({
@@ -29,6 +30,7 @@ import {
     CommitteeModule,
     AssociationModule,
     ResponsabilityModule,
+    EventModule,
   ],
 })
 export class JfdsModule {}

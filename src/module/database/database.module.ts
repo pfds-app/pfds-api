@@ -11,6 +11,7 @@ import {
   Role,
   Sacrament,
   User,
+  Event,
 } from "src/model";
 
 @Module({
@@ -29,6 +30,7 @@ import {
           Committee,
           Association,
           Responsability,
+          Event,
         ],
         //WARNING: remove synchronize on prod
         synchronize: true,
