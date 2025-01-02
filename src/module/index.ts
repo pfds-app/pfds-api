@@ -5,3 +5,4 @@ export * from "./sacrament.module";
 export * from "./region.module";
 export * from "./committee.module";
 export * from "./association.module";
+export * from "./responsability.module";

@@ -6,3 +6,4 @@ export * from "./sacrament";
 export * from "./region";
 export * from "./committee";
 export * from "./association";
+export * from "./responsability";

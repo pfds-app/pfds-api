@@ -5,3 +5,4 @@ export * from "./sacrament.entity";
 export * from "./region.entity";
 export * from "./committee.entity";
 export * from "./association.entity";
+export * from "./responsability.entity";

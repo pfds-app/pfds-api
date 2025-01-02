@@ -7,6 +7,7 @@ import {
   Committee,
   Dummy,
   Region,
+  Responsability,
   Role,
   Sacrament,
   User,
@@ -27,6 +28,7 @@ import {
           Region,
           Committee,
           Association,
+          Responsability,
         ],
         //WARNING: remove synchronize on prod
         synchronize: true,
