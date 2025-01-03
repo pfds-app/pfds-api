@@ -22,12 +22,14 @@ paths:
           required: false
           in: query
           schema:
+            type: number
             minimum: 1
             default: 1
         - name: pageSize
           required: false
           in: query
           schema:
+            type: number
             default: 10
             minimum: 1
             maximum: 200
@@ -75,12 +77,14 @@ paths:
           required: false
           in: query
           schema:
+            type: number
             minimum: 1
             default: 1
         - name: pageSize
           required: false
           in: query
           schema:
+            type: number
             default: 10
             minimum: 1
             maximum: 200
@@ -264,12 +268,14 @@ paths:
           required: false
           in: query
           schema:
+            type: number
             minimum: 1
             default: 1
         - name: pageSize
           required: false
           in: query
           schema:
+            type: number
             default: 10
             minimum: 1
             maximum: 200
@@ -462,12 +468,14 @@ paths:
           required: false
           in: query
           schema:
+            type: number
             minimum: 1
             default: 1
         - name: pageSize
           required: false
           in: query
           schema:
+            type: number
             default: 10
             minimum: 1
             maximum: 200
@@ -567,12 +575,14 @@ paths:
           required: false
           in: query
           schema:
+            type: number
             minimum: 1
             default: 1
         - name: pageSize
           required: false
           in: query
           schema:
+            type: number
             default: 10
             minimum: 1
             maximum: 200
@@ -765,12 +775,14 @@ paths:
           required: false
           in: query
           schema:
+            type: number
             minimum: 1
             default: 1
         - name: pageSize
           required: false
           in: query
           schema:
+            type: number
             default: 10
             minimum: 1
             maximum: 200
@@ -963,12 +975,14 @@ paths:
           required: false
           in: query
           schema:
+            type: number
             minimum: 1
             default: 1
         - name: pageSize
           required: false
           in: query
           schema:
+            type: number
             default: 10
             minimum: 1
             maximum: 200
@@ -1161,12 +1175,14 @@ paths:
           required: false
           in: query
           schema:
+            type: number
             minimum: 1
             default: 1
         - name: pageSize
           required: false
           in: query
           schema:
+            type: number
             default: 10
             minimum: 1
             maximum: 200
@@ -1359,12 +1375,14 @@ paths:
           required: false
           in: query
           schema:
+            type: number
             minimum: 1
             default: 1
         - name: pageSize
           required: false
           in: query
           schema:
+            type: number
             default: 10
             minimum: 1
             maximum: 200
@@ -1557,12 +1575,14 @@ paths:
           required: false
           in: query
           schema:
+            type: number
             minimum: 1
             default: 1
         - name: pageSize
           required: false
           in: query
           schema:
+            type: number
             default: 10
             minimum: 1
             maximum: 200

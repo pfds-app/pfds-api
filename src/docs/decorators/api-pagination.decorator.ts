@@ -10,6 +10,7 @@ export function ApiPagination() {
       type: "number",
       required: false,
       schema: {
+        type: "number",
         minimum: 1,
         default: 1,
       },
@@ -19,6 +20,7 @@ export function ApiPagination() {
       type: "number",
       required: false,
       schema: {
+        type: "number",
         default: 10,
         minimum: 1,
         maximum: MAX_ITEM_PER_PAGE,
