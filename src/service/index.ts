@@ -8,3 +8,4 @@ export * from "./association.service";
 export * from "./responsability.service";
 export * from "./event.service";
 export * from "./ledger.service";
+export * from "./operation.service";

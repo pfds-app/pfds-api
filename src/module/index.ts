@@ -8,3 +8,4 @@ export * from "./association.module";
 export * from "./responsability.module";
 export * from "./event.module";
 export * from "./ledger.module";
+export * from "./operation.module";

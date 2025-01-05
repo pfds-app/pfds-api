@@ -7,3 +7,4 @@ export * from "./association.mapper";
 export * from "./responsability.mapper";
 export * from "./event.mapper";
 export * from "./ledger.mapper";
+export * from "./operation.mapper";

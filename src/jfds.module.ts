@@ -14,6 +14,7 @@ import {
   ResponsabilityModule,
   EventModule,
   LedgerModule,
+  OperationModule,
 } from "./module";
 
 @Module({
@@ -33,6 +34,7 @@ import {
     ResponsabilityModule,
     EventModule,
     LedgerModule,
+    OperationModule,
   ],
 })
 export class JfdsModule {}

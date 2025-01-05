@@ -9,3 +9,4 @@ export * from "./association";
 export * from "./responsability";
 export * from "./event";
 export * from "./ledger";
+export * from "./operation";

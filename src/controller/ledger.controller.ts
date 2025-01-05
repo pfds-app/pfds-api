@@ -18,7 +18,7 @@ import { Ledger } from "./rest";
 import { LedgerMapper } from "./mapper";
 
 @Controller()
-@ApiTags("Ledgers")
+@ApiTags("Moneys")
 export class LedgerController {
   constructor(
     private readonly ledgerService: LedgerService,
