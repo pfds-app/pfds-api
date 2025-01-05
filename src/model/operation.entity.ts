@@ -17,7 +17,7 @@ export class Operation {
   @Column({ type: "int", name: "number_of_tickets" })
   numberOfTickets: number;
 
-  @Column({ type: "decimal", precision: 16, scale: 10, name: "ticket_price" })
+  @Column({ type: "decimal", precision: 16, scale: 6, name: "ticket_price" })
   ticketPrice: string;
 
   @Column({ type: "text" })

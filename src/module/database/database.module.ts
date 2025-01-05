@@ -14,6 +14,7 @@ import {
   Event,
   Ledger,
   Operation,
+  Ticket,
 } from "src/model";
 
 @Module({
@@ -35,6 +36,7 @@ import {
           Event,
           Ledger,
           Operation,
+          Ticket,
         ],
         //WARNING: remove synchronize on prod
         synchronize: true,

@@ -2,31 +2,33 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  ManyToOne,
   PrimaryColumn,
   UpdateDateColumn,
 } from "typeorm";
-
-export enum LedgerMouvementType {
-  IN = "IN",
-  OUT = "OUT",
-}
+import { Operation } from "./operation.entity";
+import { User } from "./user.entity";
 
 @Entity()
-export class Ledger {
+export class Ticket {
   @PrimaryColumn()
   id: string;
 
-  @Column()
-  name: string;
+  @Column({ type: "int", name: "from_number" })
+  fromNumber: number;
 
-  @Column({ type: "date", name: "ledger_date" })
-  ledgerDate: string;
+  @Column({ type: "int", name: "to_number" })
+  toNumber: number;
 
-  @Column({ type: "enum", enum: LedgerMouvementType, name: "mouvement_type" })
-  mouvementType: LedgerMouvementType;
+  @ManyToOne(() => Operation, {
+    eager: true,
+    nullable: false,
+    onDelete: "CASCADE",
+  })
+  operation: Operation;
 
-  @Column({ type: "decimal", precision: 16, scale: 6 })
-  price: string;
+  @ManyToOne(() => User, { eager: true, nullable: false, onDelete: "CASCADE" })
+  staff: User;
 
   @CreateDateColumn({
     name: "created_at",

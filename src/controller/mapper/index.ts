@@ -8,3 +8,4 @@ export * from "./responsability.mapper";
 export * from "./event.mapper";
 export * from "./ledger.mapper";
 export * from "./operation.mapper";
+export * from "./ticket.mapper";

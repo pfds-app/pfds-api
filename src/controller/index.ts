@@ -9,3 +9,4 @@ export * from "./responsability.controller";
 export * from "./event.controller";
 export * from "./ledger.controller";
 export * from "./operation.controller";
+export * from "./ticket.controller";

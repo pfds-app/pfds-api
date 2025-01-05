@@ -9,3 +9,4 @@ export * from "./responsability.entity";
 export * from "./event.entity";
 export * from "./ledger.entity";
 export * from "./operation.entity";
+export * from "./ticket.entity";

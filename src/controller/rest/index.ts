@@ -10,3 +10,5 @@ export * from "./responsability";
 export * from "./event";
 export * from "./ledger";
 export * from "./operation";
+export * from "./crupdate-ticket";
+export * from "./ticket";

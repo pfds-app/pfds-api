@@ -25,17 +25,22 @@ export class UserController {
   @Get("/users")
   @Authenticated()
   @ApiPagination()
-  @ApiCriteria({ name: "lastName", type: "string" })
+  @ApiCriteria(
+    { name: "lastName", type: "string" },
+    { name: "firstName", type: "string" }
+  )
   @ApiJfds({
     operationId: "getUsers",
     type: [User],
   })
   async findAll(
     @Pagination() pagination: PaginationParams,
-    @Query("lastName") lastName?: string
+    @Query("lastName") lastName?: string,
+    @Query("firstName") firstName?: string
   ) {
     const users = await this.userService.findAll(pagination, {
       lastName,
+      firstName,
     });
     return Promise.all(users.map((user) => this.userMapper.toRest(user)));
   }
