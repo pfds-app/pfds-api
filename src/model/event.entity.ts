@@ -11,7 +11,7 @@ export class Event {
   @PrimaryColumn()
   id: string;
 
-  @Column({ unique: true })
+  @Column()
   name: string;
 
   @Column()

@@ -16,7 +16,7 @@ export class Ledger {
   @PrimaryColumn()
   id: string;
 
-  @Column({ unique: true })
+  @Column()
   name: string;
 
   @Column({ type: "date", name: "ledger_date" })
