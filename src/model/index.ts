@@ -7,3 +7,4 @@ export * from "./committee.entity";
 export * from "./association.entity";
 export * from "./responsability.entity";
 export * from "./event.entity";
+export * from "./ledger.entity";

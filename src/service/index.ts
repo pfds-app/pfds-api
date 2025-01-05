@@ -7,3 +7,4 @@ export * from "./committee.service";
 export * from "./association.service";
 export * from "./responsability.service";
 export * from "./event.service";
+export * from "./ledger.service";

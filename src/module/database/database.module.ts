@@ -12,6 +12,7 @@ import {
   Sacrament,
   User,
   Event,
+  Ledger,
 } from "src/model";
 
 @Module({
@@ -31,6 +32,7 @@ import {
           Association,
           Responsability,
           Event,
+          Ledger,
         ],
         //WARNING: remove synchronize on prod
         synchronize: true,

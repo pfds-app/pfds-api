@@ -23,7 +23,7 @@ export class SacramentController {
   constructor(
     private readonly sacramentService: SacramentService,
     private readonly sacramentMapper: SacramentMapper
-  ) { }
+  ) {}
 
   @Get("/sacraments")
   @Authenticated()

@@ -6,3 +6,4 @@ export * from "./committee.mapper";
 export * from "./association.mapper";
 export * from "./responsability.mapper";
 export * from "./event.mapper";
+export * from "./ledger.mapper";

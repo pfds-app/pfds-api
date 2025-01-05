@@ -7,3 +7,4 @@ export * from "./committee.controller";
 export * from "./association.controller";
 export * from "./responsability.controller";
 export * from "./event.controller";
+export * from "./ledger.controller";

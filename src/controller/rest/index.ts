@@ -8,3 +8,4 @@ export * from "./committee";
 export * from "./association";
 export * from "./responsability";
 export * from "./event";
+export * from "./ledger";
