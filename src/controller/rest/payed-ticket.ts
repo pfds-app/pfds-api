@@ -15,7 +15,7 @@ export class PayedTicket {
   @Min(1)
   @IsNumber()
   @ApiProperty({ type: "number", minimum: 1 })
-  ticketNumber: string;
+  ticketNumber: number;
 
   @IsUUID()
   @ApiProperty({ format: "uuid" })

@@ -14,7 +14,7 @@ export class PayedTicket {
   id: string;
 
   @Column({ type: "int", name: "ticket_number" })
-  ticketNumber: string;
+  ticketNumber: number;
 
   @Column({ type: "boolean", name: "is_payed" })
   isPayed: boolean;

@@ -1,19 +1,25 @@
-import { Repository } from "typeorm";
+import { DataSource, Repository } from "typeorm";
 import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
+import { v4 as uuid } from "uuid";
 
-import { Ticket } from "src/model";
+import { PayedTicket, Ticket } from "src/model";
 import { PaginationParams } from "src/controller/decorators";
+import { Criteria } from "./utils/criteria";
 import { findByCriteria } from "./utils/find-by-cireria";
 import { UPDATED_AT_CREATED_AT_ORDER_BY } from "./utils/default-order-by";
-import { Criteria } from "./utils/criteria";
 
 @Injectable()
 export class TicketService {
   constructor(
     @InjectRepository(Ticket)
-    private readonly repository: Repository<Ticket>
-  ) {}
+    private readonly repository: Repository<Ticket>,
+
+    @InjectRepository(PayedTicket)
+    private readonly payedTicketRepository: Repository<PayedTicket>,
+
+    private readonly datasource: DataSource
+  ) { }
 
   async findAll(pagination: PaginationParams, criteria: Criteria<Ticket>) {
     return findByCriteria<Ticket>({
@@ -41,7 +47,51 @@ export class TicketService {
       );
     }
 
-    return this.repository.save(tickets);
+    const pTicketsSaved = await this.payedTicketRepository.find({
+      where: {
+        ticket: {
+          id: ticket.id,
+        },
+      },
+    });
+
+    const pTicketsToDelete = pTicketsSaved.filter(
+      (payedTicket) =>
+        payedTicket.ticketNumber < ticket.fromNumber ||
+        payedTicket.ticketNumber > ticket.toNumber
+    );
+    const pTicketsToSave: PayedTicket[] = new Array(
+      ticket.toNumber - ticket.fromNumber + 1
+    )
+      .fill(0)
+      .map((_, index) => {
+        const ticketNumber = ticket.fromNumber + index;
+        const toSave = pTicketsSaved.find(
+          (ticket) => ticket.ticketNumber == ticketNumber
+        );
+        return (
+          toSave ??
+          this.payedTicketRepository.create({
+            ticket,
+            id: uuid(),
+            ticketNumber,
+            isPayed: false,
+            createdAt: ticket.updatedAt,
+            updatedAt: ticket.updatedAt,
+          })
+        );
+      });
+
+    return await this.datasource.transaction(async (entityManager) => {
+      const createdTickets = [await entityManager.save(Ticket, ticket)];
+      await entityManager.delete(
+        PayedTicket,
+        pTicketsToDelete.map((payedTicket) => payedTicket.id)
+      );
+      await entityManager.save(PayedTicket, pTicketsToSave);
+
+      return createdTickets;
+    });
   }
 
   async deleteById(id: string) {
