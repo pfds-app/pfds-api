@@ -1,28 +1,29 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsDateString, IsNumber, IsUUID, Min } from "class-validator";
+import {
+  IsBoolean,
+  IsDateString,
+  IsNumber,
+  IsUUID,
+  Min,
+} from "class-validator";
 
-export class CrupdateTicket {
+export class PayedTicket {
   @IsUUID()
   @ApiProperty({ format: "uuid" })
   id: string;
 
-  @IsNumber()
   @Min(1)
-  @ApiProperty()
-  fromNumber: number;
-
   @IsNumber()
-  @Min(1)
-  @ApiProperty()
-  toNumber: number;
+  @ApiProperty({ type: "number", minimum: 1 })
+  ticketNumber: string;
 
   @IsUUID()
   @ApiProperty({ format: "uuid" })
-  operationId: string;
+  ticketId: string;
 
-  @IsUUID()
-  @ApiProperty({ format: "uuid" })
-  staffId: string;
+  @IsBoolean()
+  @ApiProperty()
+  isPayed: boolean;
 
   @IsDateString()
   @ApiProperty({ format: "date-time" })

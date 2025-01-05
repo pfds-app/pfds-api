@@ -29,6 +29,18 @@ export class TicketService {
   }
 
   async saveTickets(tickets: Ticket[]) {
+    if (tickets.length !== 1) {
+      throw new BadRequestException(
+        "Creating Many tickets is not supported yet !"
+      );
+    }
+    const [ticket] = tickets;
+    if (ticket.fromNumber > ticket.toNumber) {
+      throw new BadRequestException(
+        "fromNumber must be less or equal than toNumber"
+      );
+    }
+
     return this.repository.save(tickets);
   }
 

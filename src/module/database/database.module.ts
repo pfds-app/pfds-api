@@ -15,6 +15,7 @@ import {
   Ledger,
   Operation,
   Ticket,
+  PayedTicket,
 } from "src/model";
 
 @Module({
@@ -37,6 +38,7 @@ import {
           Ledger,
           Operation,
           Ticket,
+          PayedTicket,
         ],
         //WARNING: remove synchronize on prod
         synchronize: true,

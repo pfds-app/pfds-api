@@ -12,3 +12,5 @@ export * from "./ledger";
 export * from "./operation";
 export * from "./crupdate-ticket";
 export * from "./ticket";
+export * from "./payed-ticket";
+export * from "./crupdate-ticket";
