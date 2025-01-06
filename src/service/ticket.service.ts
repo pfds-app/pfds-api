@@ -67,7 +67,7 @@ export class TicketService {
       .map((_, index) => {
         const ticketNumber = ticket.fromNumber + index;
         const toSave = pTicketsSaved.find(
-          (ticket) => ticket.ticketNumber == ticketNumber
+          (ticket) => ticket.ticketNumber === ticketNumber
         );
         return (
           toSave ??

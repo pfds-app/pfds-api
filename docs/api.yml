@@ -464,6 +464,11 @@ paths:
           in: query
           schema:
             type: string
+        - name: firstName
+          required: false
+          in: query
+          schema:
+            type: string
         - name: page
           required: false
           in: query
@@ -1823,7 +1828,7 @@ paths:
         - bearer: []
       summary: ''
       tags:
-        - Ledgers
+        - Moneys
     put:
       operationId: crupdateLedgers
       parameters: []
@@ -1872,7 +1877,7 @@ paths:
         - bearer: []
       summary: ''
       tags:
-        - Ledgers
+        - Moneys
   /ledgers/{id}:
     get:
       operationId: getLedgerById
@@ -1917,7 +1922,7 @@ paths:
         - bearer: []
       summary: ''
       tags:
-        - Ledgers
+        - Moneys
     delete:
       operationId: deleteLedgerById
       parameters:
@@ -1961,7 +1966,528 @@ paths:
         - bearer: []
       summary: ''
       tags:
-        - Ledgers
+        - Moneys
+  /operations:
+    get:
+      operationId: getOperations
+      parameters:
+        - name: name
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          schema:
+            type: number
+            minimum: 1
+            default: 1
+        - name: pageSize
+          required: false
+          in: query
+          schema:
+            type: number
+            default: 10
+            minimum: 1
+            maximum: 200
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Operation'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+      security:
+        - bearer: []
+      summary: ''
+      tags:
+        - Moneys
+    put:
+      operationId: crupdateOperations
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/Operation'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Operation'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+      security:
+        - bearer: []
+      summary: ''
+      tags:
+        - Moneys
+  /operations/{id}:
+    get:
+      operationId: getOperationById
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Operation'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+      security:
+        - bearer: []
+      summary: ''
+      tags:
+        - Moneys
+    delete:
+      operationId: deleteOperationById
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Operation'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+      security:
+        - bearer: []
+      summary: ''
+      tags:
+        - Moneys
+  /tickets:
+    get:
+      operationId: getTickets
+      parameters:
+        - name: page
+          required: false
+          in: query
+          schema:
+            type: number
+            minimum: 1
+            default: 1
+        - name: pageSize
+          required: false
+          in: query
+          schema:
+            type: number
+            default: 10
+            minimum: 1
+            maximum: 200
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ticket'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+      security:
+        - bearer: []
+      summary: ''
+      tags:
+        - Moneys
+    put:
+      operationId: crupdateTickets
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CrupdateTicket'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Ticket'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+      security:
+        - bearer: []
+      summary: ''
+      tags:
+        - Moneys
+  /tickets/{id}:
+    get:
+      operationId: getTicketById
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+      security:
+        - bearer: []
+      summary: ''
+      tags:
+        - Moneys
+    delete:
+      operationId: deleteTicketById
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Ticket'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+      security:
+        - bearer: []
+      summary: ''
+      tags:
+        - Moneys
+  /operation/{operationId}/staffs/{staffId}/payed-tickets:
+    get:
+      operationId: getPayedTickets
+      parameters:
+        - name: operationId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: staffId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          schema:
+            type: number
+            minimum: 1
+            default: 1
+        - name: pageSize
+          required: false
+          in: query
+          schema:
+            type: number
+            default: 10
+            minimum: 1
+            maximum: 200
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PayedTicket'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+      security:
+        - bearer: []
+      summary: ''
+      tags:
+        - Moneys
+    put:
+      operationId: crupdatePayedTickets
+      parameters:
+        - name: operationId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: staffId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/PayedTicket'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PayedTicket'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+      security:
+        - bearer: []
+      summary: ''
+      tags:
+        - Moneys
 info:
   title: Jfds Api
   description: Jfds
@@ -1976,7 +2502,7 @@ tags:
     description: ''
   - name: Resources
     description: ''
-  - name: Ledgers
+  - name: Moneys
     description: ''
 servers:
   - url: http://localhost:3000
@@ -2359,5 +2885,123 @@ components:
         - ledgerDate
         - mouvementType
         - price
+        - createdAt
+        - updatedAt
+    Operation:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        numberOfTickets:
+          type: number
+          minimum: 1
+        ticketPrice:
+          type: string
+        description:
+          type: string
+        operationDate:
+          type: string
+          format: date
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - numberOfTickets
+        - ticketPrice
+        - description
+        - operationDate
+        - createdAt
+        - updatedAt
+    Ticket:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        fromNumber:
+          type: number
+        toNumber:
+          type: number
+        operation:
+          $ref: '#/components/schemas/Operation'
+        staff:
+          $ref: '#/components/schemas/User'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - fromNumber
+        - toNumber
+        - operation
+        - staff
+        - createdAt
+        - updatedAt
+    CrupdateTicket:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        fromNumber:
+          type: number
+        toNumber:
+          type: number
+        operationId:
+          type: string
+          format: uuid
+        staffId:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - fromNumber
+        - toNumber
+        - operationId
+        - staffId
+        - createdAt
+        - updatedAt
+    PayedTicket:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        ticketNumber:
+          type: number
+          minimum: 1
+        ticketId:
+          type: string
+          format: uuid
+        isPayed:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - ticketNumber
+        - ticketId
+        - isPayed
         - createdAt
         - updatedAt
