@@ -19,7 +19,7 @@ export class TicketService {
     private readonly payedTicketRepository: Repository<PayedTicket>,
 
     private readonly datasource: DataSource
-  ) { }
+  ) {}
 
   async findAll(pagination: PaginationParams, criteria: Criteria<Ticket>) {
     return findByCriteria<Ticket>({
@@ -84,12 +84,17 @@ export class TicketService {
 
     return await this.datasource.transaction(async (entityManager) => {
       const createdTickets = [await entityManager.save(Ticket, ticket)];
-      await entityManager.delete(
-        PayedTicket,
-        pTicketsToDelete.map((payedTicket) => payedTicket.id)
-      );
-      await entityManager.save(PayedTicket, pTicketsToSave);
 
+      if (pTicketsToDelete.length > 0) {
+        await entityManager.delete(
+          PayedTicket,
+          pTicketsToDelete.map((payedTicket) => payedTicket.id)
+        );
+      }
+
+      if (pTicketsToSave.length > 0) {
+        await entityManager.save(PayedTicket, pTicketsToSave);
+      }
       return createdTickets;
     });
   }
