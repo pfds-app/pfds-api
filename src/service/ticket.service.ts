@@ -3,7 +3,7 @@ import { BadRequestException, Injectable } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { v4 as uuid } from "uuid";
 
-import { PayedTicket, Ticket } from "src/model";
+import { PayedTicket, Ticket, User } from "src/model";
 import { PaginationParams } from "src/controller/decorators";
 import { Criteria } from "./utils/criteria";
 import { findByCriteria } from "./utils/find-by-cireria";
@@ -19,7 +19,7 @@ export class TicketService {
     private readonly payedTicketRepository: Repository<PayedTicket>,
 
     private readonly datasource: DataSource
-  ) {}
+  ) { }
 
   async findAll(pagination: PaginationParams, criteria: Criteria<Ticket>) {
     return findByCriteria<Ticket>({
@@ -99,6 +99,17 @@ export class TicketService {
     });
   }
 
+  async findOperationStaffs(operationId: string): Promise<User[]> {
+    const tickets = await this.repository.find({
+      where: {
+        operation: {
+          id: operationId
+        }
+      }
+    });
+
+    return tickets.map(ticket => ticket.staff);
+  }
   async deleteById(id: string) {
     const toDelete = await this.findById(id);
     if (!toDelete) {

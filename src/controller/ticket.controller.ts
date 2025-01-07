@@ -14,15 +14,30 @@ import { TicketService } from "src/service";
 import { Authenticated } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { CrupdateTicket, Ticket } from "./rest";
-import { TicketMapper } from "./mapper";
+import { TicketMapper, UserMapper } from "./mapper";
+import { User } from "./rest";
 
 @Controller()
 @ApiTags("Moneys")
 export class TicketController {
   constructor(
     private readonly ticketService: TicketService,
-    private readonly ticketMapper: TicketMapper
-  ) {}
+    private readonly ticketMapper: TicketMapper,
+    private readonly userMapper: UserMapper
+  ) { }
+
+  @Get("/operations/:operationId/staffs")
+  @Authenticated()
+  @ApiJfds({
+    operationId: "findAllOperationStaffs",
+    type: [User],
+  })
+  async findStaffs(@Param("operationId") operationId: string) {
+    const users = await this.ticketService.findOperationStaffs(operationId);
+    return Promise.all(
+      users.map(user => this.userMapper.toRest(user))
+    );
+  }
 
   @Get("/tickets")
   @ApiPagination()
