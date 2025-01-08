@@ -19,6 +19,9 @@ export class PayedTicket {
   @Column({ type: "boolean", name: "is_payed" })
   isPayed: boolean;
 
+  @Column({ type: "boolean", name: "is_distributed" })
+  isDistributed: boolean;
+
   @ManyToOne(() => Ticket, {
     eager: true,
     nullable: false,

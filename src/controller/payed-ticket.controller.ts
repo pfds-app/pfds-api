@@ -14,7 +14,7 @@ export class PayedTicketController {
   constructor(
     private readonly payedTiketService: PayedTicketService,
     private readonly payedTiketMapper: PayedTicketMapper
-  ) {}
+  ) { }
 
   @Get("/operation/:operationId/staffs/:staffId/payed-tickets")
   @ApiPagination()
@@ -41,6 +41,27 @@ export class PayedTicketController {
     return Promise.all(
       payedTikets.map((role) => this.payedTiketMapper.toRest(role))
     );
+  }
+
+  @Get("/operation/:operationId/tickets/:ticketNumber")
+  @Authenticated()
+  @ApiJfds({
+    operationId: "getOperationTicketByTicketNumber",
+    type: PayedTicket,
+  })
+  async findOperationTicketByTicketNumber(
+    @Param("operationId") operationId: string,
+    @Param("ticketNumber") ticketNumber: number
+  ) {
+    const payedTikets = await this.payedTiketService.findAll({ page: 1, pageSize: 1 }, {
+      ticket: {
+        operation: {
+          id: operationId,
+        },
+      },
+      ticketNumber
+    });
+    return payedTikets[0] ?? null;
   }
 
   @Put("/operation/:operationId/staffs/:staffId/payed-tickets")

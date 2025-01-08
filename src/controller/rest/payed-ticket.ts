@@ -25,6 +25,10 @@ export class PayedTicket {
   @ApiProperty()
   isPayed: boolean;
 
+  @IsBoolean()
+  @ApiProperty()
+  isDistributed: boolean;
+
   @IsDateString()
   @ApiProperty({ format: "date-time" })
   createdAt: string;

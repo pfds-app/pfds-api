@@ -20,7 +20,7 @@ export class TicketService {
     @InjectRepository(PayedTicket)
     private readonly payedTicketRepository: Repository<PayedTicket>,
     private readonly datasource: DataSource
-  ) {}
+  ) { }
 
   async findAll(pagination: PaginationParams, criteria: Criteria<Ticket>) {
     return findByCriteria<Ticket>({
@@ -77,6 +77,7 @@ export class TicketService {
             id: uuid(),
             ticketNumber,
             isPayed: false,
+            isDistributed: false,
             createdAt: ticket.updatedAt,
             updatedAt: ticket.updatedAt,
           })
