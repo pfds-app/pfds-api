@@ -2597,6 +2597,56 @@ paths:
       summary: ''
       tags:
         - Moneys
+  /operation/{operationId}/tickets/{ticketNumber}:
+    get:
+      operationId: getOperationTicketByTicketNumber
+      parameters:
+        - name: operationId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: ticketNumber
+          required: true
+          in: path
+          schema:
+            type: number
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PayedTicket'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+      security:
+        - bearer: []
+      summary: ''
+      tags:
+        - Moneys
 info:
   title: Jfds Api
   description: Jfds
@@ -3129,6 +3179,8 @@ components:
           format: uuid
         isPayed:
           type: boolean
+        isDistributed:
+          type: boolean
         createdAt:
           type: string
           format: date-time
@@ -3140,5 +3192,6 @@ components:
         - ticketNumber
         - ticketId
         - isPayed
+        - isDistributed
         - createdAt
         - updatedAt
