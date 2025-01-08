@@ -153,7 +153,7 @@ export class TicketService {
         notPayedAmount: new BigNumber(ticket.operation.ticketPrice)
           .multipliedBy(numberOfNotPayedTickets)
           .toString(),
-        numberOfTickets: payedTickets.length,
+        numberOfTickets: allPayedTicketsEntities.length,
         pourcentageOfPayedTickets:
           (numberOfPayedTickets / allPayedTicketsEntities.length) * 100,
         pourcentageOfNotPayedTickets:
