@@ -14,8 +14,8 @@ import { TicketService } from "src/service";
 import { Authenticated } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { CrupdateTicket, Ticket } from "./rest";
-import { TicketMapper, UserMapper } from "./mapper";
-import { User } from "./rest";
+import { TicketMapper, TicketStatusMapper, UserMapper } from "./mapper";
+import { User, TicketStatus } from "./rest";
 
 @Controller()
 @ApiTags("Moneys")
@@ -23,19 +23,40 @@ export class TicketController {
   constructor(
     private readonly ticketService: TicketService,
     private readonly ticketMapper: TicketMapper,
-    private readonly userMapper: UserMapper
-  ) { }
+    private readonly userMapper: UserMapper,
+    private readonly ticketStatusMapper: TicketStatusMapper
+  ) {}
 
   @Get("/operations/:operationId/staffs")
   @Authenticated()
   @ApiJfds({
-    operationId: "findAllOperationStaffs",
+    operationId: "getAllOperationStaffs",
     type: [User],
   })
-  async findStaffs(@Param("operationId") operationId: string) {
+  async getAllOperationStaffs(@Param("operationId") operationId: string) {
     const users = await this.ticketService.findOperationStaffs(operationId);
+    return Promise.all(users.map((user) => this.userMapper.toRest(user)));
+  }
+
+  @Get("/operations/:operationId/tickets/status")
+  @Authenticated()
+  @ApiPagination()
+  @ApiJfds({
+    operationId: "getAllOperationTicketsStatus",
+    type: [TicketStatus],
+  })
+  async getAllOperationTicketsStatus(
+    @Pagination() pagination: PaginationParams,
+    @Param("operationId") operationId: string
+  ) {
+    const results = await this.ticketService.getOperationTicketStatus(
+      operationId,
+      pagination
+    );
     return Promise.all(
-      users.map(user => this.userMapper.toRest(user))
+      results.map((ticketStatus) =>
+        this.ticketStatusMapper.serviceToRest(ticketStatus)
+      )
     );
   }
 

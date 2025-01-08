@@ -8,6 +8,8 @@ import { PaginationParams } from "src/controller/decorators";
 import { Criteria } from "./utils/criteria";
 import { findByCriteria } from "./utils/find-by-cireria";
 import { UPDATED_AT_CREATED_AT_ORDER_BY } from "./utils/default-order-by";
+import { TicketStatus } from "./model";
+import BigNumber from "bignumber.js";
 
 @Injectable()
 export class TicketService {
@@ -17,9 +19,8 @@ export class TicketService {
 
     @InjectRepository(PayedTicket)
     private readonly payedTicketRepository: Repository<PayedTicket>,
-
     private readonly datasource: DataSource
-  ) { }
+  ) {}
 
   async findAll(pagination: PaginationParams, criteria: Criteria<Ticket>) {
     return findByCriteria<Ticket>({
@@ -103,12 +104,12 @@ export class TicketService {
     const tickets = await this.repository.find({
       where: {
         operation: {
-          id: operationId
-        }
-      }
+          id: operationId,
+        },
+      },
     });
 
-    return tickets.map(ticket => ticket.staff);
+    return tickets.map((ticket) => ticket.staff);
   }
   async deleteById(id: string) {
     const toDelete = await this.findById(id);
@@ -117,5 +118,52 @@ export class TicketService {
     }
     await this.repository.delete({ id });
     return toDelete;
+  }
+
+  async getOperationTicketStatus(
+    operationId: string,
+    pagination: PaginationParams
+  ): Promise<TicketStatus[]> {
+    const tickets = await this.findAll(pagination, {
+      operation: {
+        id: operationId,
+      },
+    });
+
+    const ticketsStatus = tickets.map(async (ticket) => {
+      const allPayedTicketsEntities = await this.payedTicketRepository.find({
+        where: {
+          ticket: {
+            id: ticket.id,
+          },
+        },
+      });
+      const payedTickets = allPayedTicketsEntities.filter(
+        (payedTicket) => payedTicket.isPayed
+      );
+      const numberOfPayedTickets = payedTickets.length;
+      const numberOfNotPayedTickets =
+        allPayedTicketsEntities.length - numberOfPayedTickets;
+
+      const ticketStatus: TicketStatus = {
+        ticket,
+        payedAmount: new BigNumber(ticket.operation.ticketPrice)
+          .multipliedBy(numberOfPayedTickets)
+          .toString(),
+        notPayedAmount: new BigNumber(ticket.operation.ticketPrice)
+          .multipliedBy(numberOfNotPayedTickets)
+          .toString(),
+        numberOfTickets: payedTickets.length,
+        pourcentageOfPayedTickets:
+          (numberOfPayedTickets / allPayedTicketsEntities.length) * 100,
+        pourcentageOfNotPayedTickets:
+          (numberOfNotPayedTickets / allPayedTicketsEntities.length) * 100,
+        numberOfPayedTickets,
+        numberOfNotPayedTickets,
+      };
+      return ticketStatus;
+    });
+
+    return Promise.all(ticketsStatus);
   }
 }

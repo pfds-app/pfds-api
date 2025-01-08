@@ -2169,7 +2169,7 @@ paths:
         - Moneys
   /operations/{operationId}/staffs:
     get:
-      operationId: findAllOperationStaffs
+      operationId: getAllOperationStaffs
       parameters:
         - name: operationId
           required: true
@@ -2185,6 +2185,68 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/User'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+      security:
+        - bearer: []
+      summary: ''
+      tags:
+        - Moneys
+  /operations/{operationId}/tickets/status:
+    get:
+      operationId: getAllOperationTicketsStatus
+      parameters:
+        - name: operationId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          schema:
+            type: number
+            minimum: 1
+            default: 1
+        - name: pageSize
+          required: false
+          in: query
+          schema:
+            type: number
+            default: 10
+            minimum: 1
+            maximum: 200
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TicketStatus'
         '400':
           description: ''
           content:
@@ -2995,6 +3057,34 @@ components:
         - staff
         - createdAt
         - updatedAt
+    TicketStatus:
+      type: object
+      properties:
+        ticket:
+          $ref: '#/components/schemas/Ticket'
+        numberOfTickets:
+          type: number
+        numberOfPayedTickets:
+          type: number
+        numberOfNotPayedTickets:
+          type: number
+        pourcentageOfPayedTickets:
+          type: number
+        pourcentageOfNotPayedTickets:
+          type: number
+        notPayedAmount:
+          type: string
+        payedAmount:
+          type: string
+      required:
+        - ticket
+        - numberOfTickets
+        - numberOfPayedTickets
+        - numberOfNotPayedTickets
+        - pourcentageOfPayedTickets
+        - pourcentageOfNotPayedTickets
+        - notPayedAmount
+        - payedAmount
     CrupdateTicket:
       type: object
       properties:
