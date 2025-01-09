@@ -4,23 +4,27 @@ import { InjectRepository } from "@nestjs/typeorm";
 
 import { Event } from "src/model";
 import { PaginationParams } from "src/controller/decorators";
-import { findByCriteria } from "./utils/find-by-cireria";
-import { UPDATED_AT_CREATED_AT_ORDER_BY } from "./utils/default-order-by";
 import { Criteria } from "./utils/criteria";
+import { findByCriteria } from "./utils/find-by-cireria";
 
 @Injectable()
 export class EventService {
   constructor(
     @InjectRepository(Event)
     private readonly repository: Repository<Event>
-  ) {}
+  ) { }
 
   async findAll(pagination: PaginationParams, criteria: Criteria<Event>) {
     return findByCriteria<Event>({
       repository: this.repository,
       criteria,
       pagination,
-      order: UPDATED_AT_CREATED_AT_ORDER_BY,
+      order: {
+        beginDate: "DESC",
+        endDate: "DESC",
+        updatedAt: "DESC",
+        createdAt: "DESC"
+      },
     });
   }
 

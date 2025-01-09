@@ -1,7 +1,7 @@
 import { applyDecorators } from "@nestjs/common";
 import { ApiQuery } from "@nestjs/swagger";
 
-export const MAX_ITEM_PER_PAGE = 200;
+export const MAX_ITEM_PER_PAGE = 500;
 
 export function ApiPagination() {
   return applyDecorators(
