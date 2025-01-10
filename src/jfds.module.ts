@@ -1,5 +1,7 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule } from "@nestjs/config";
+import { ServeStaticModule } from "@nestjs/serve-static";
+import { join } from "path"
 
 import { DatabaseModule } from "./module/database";
 import { AuthModule } from "./auth";
@@ -24,6 +26,10 @@ import {
     ConfigModule.forRoot({
       isGlobal: true,
     }),
+    ServeStaticModule.forRoot({
+      rootPath: join(__dirname, '..', 'files'),
+      serveRoot: "/files"
+    }),
     DatabaseModule,
     HealthModule,
     RoleModule,
@@ -41,4 +47,4 @@ import {
     PayedTicketModule,
   ],
 })
-export class JfdsModule {}
+export class JfdsModule { }
