@@ -2,7 +2,11 @@ import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 
 import { PayedTicket, Ticket } from "src/model";
-import { TicketMapper, TicketStatusMapper } from "src/controller/mapper";
+import {
+  OperationResultMapper,
+  TicketMapper,
+  TicketStatusMapper,
+} from "src/controller/mapper";
 import { TicketController } from "src/controller";
 import { TicketService } from "src/service";
 import { UserModule } from "./user.module";
@@ -17,7 +21,17 @@ import { PayedTicketModule } from "./payed-ticket.module";
     TypeOrmModule.forFeature([Ticket, PayedTicket]),
   ],
   controllers: [TicketController],
-  providers: [TicketService, TicketMapper, TicketStatusMapper],
-  exports: [TicketService, TicketMapper, TicketStatusMapper],
+  providers: [
+    TicketService,
+    TicketMapper,
+    TicketStatusMapper,
+    OperationResultMapper,
+  ],
+  exports: [
+    TicketService,
+    TicketMapper,
+    TicketStatusMapper,
+    OperationResultMapper,
+  ],
 })
 export class TicketModule {}

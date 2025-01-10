@@ -12,7 +12,7 @@ export class EventService {
   constructor(
     @InjectRepository(Event)
     private readonly repository: Repository<Event>
-  ) { }
+  ) {}
 
   async findAll(pagination: PaginationParams, criteria: Criteria<Event>) {
     return findByCriteria<Event>({
@@ -23,7 +23,7 @@ export class EventService {
         beginDate: "DESC",
         endDate: "DESC",
         updatedAt: "DESC",
-        createdAt: "DESC"
+        createdAt: "DESC",
       },
     });
   }

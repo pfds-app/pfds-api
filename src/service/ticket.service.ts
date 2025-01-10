@@ -8,7 +8,8 @@ import { PaginationParams } from "src/controller/decorators";
 import { Criteria } from "./utils/criteria";
 import { findByCriteria } from "./utils/find-by-cireria";
 import { UPDATED_AT_CREATED_AT_ORDER_BY } from "./utils/default-order-by";
-import { TicketStatus } from "./model";
+import { OperationResult, TicketStatus } from "./model";
+import { OperationService } from "./operation.service";
 import BigNumber from "bignumber.js";
 
 @Injectable()
@@ -19,8 +20,9 @@ export class TicketService {
 
     @InjectRepository(PayedTicket)
     private readonly payedTicketRepository: Repository<PayedTicket>,
-    private readonly datasource: DataSource
-  ) { }
+    private readonly datasource: DataSource,
+    private readonly operationService: OperationService
+  ) {}
 
   async findAll(pagination: PaginationParams, criteria: Criteria<Ticket>) {
     return findByCriteria<Ticket>({
@@ -166,5 +168,35 @@ export class TicketService {
     });
 
     return Promise.all(ticketsStatus);
+  }
+
+  async getOperationResults(
+    pagination: PaginationParams
+  ): Promise<OperationResult[]> {
+    const operations = await this.operationService.findAll(pagination, {});
+
+    const results: Promise<OperationResult>[] = operations.map(
+      async (operation) => {
+        const distributedPayedTickets = await this.payedTicketRepository.find({
+          where: {
+            isDistributed: true,
+            ticket: {
+              operation: {
+                id: operation.id,
+              },
+            },
+          },
+        });
+
+        return {
+          operation,
+          numberOfDistributed: distributedPayedTickets.length,
+          sumOfDistributed: new BigNumber(operation.ticketPrice)
+            .multipliedBy(distributedPayedTickets.length)
+            .toString(),
+        } as OperationResult;
+      }
+    );
+    return Promise.all(results);
   }
 }

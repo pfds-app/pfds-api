@@ -14,7 +14,7 @@ export class PayedTicketController {
   constructor(
     private readonly payedTiketService: PayedTicketService,
     private readonly payedTiketMapper: PayedTicketMapper
-  ) { }
+  ) {}
 
   @Get("/operation/:operationId/staffs/:staffId/payed-tickets")
   @ApiPagination()
@@ -53,14 +53,17 @@ export class PayedTicketController {
     @Param("operationId") operationId: string,
     @Param("ticketNumber") ticketNumber: number
   ) {
-    const payedTikets = await this.payedTiketService.findAll({ page: 1, pageSize: 1 }, {
-      ticket: {
-        operation: {
-          id: operationId,
+    const payedTikets = await this.payedTiketService.findAll(
+      { page: 1, pageSize: 1 },
+      {
+        ticket: {
+          operation: {
+            id: operationId,
+          },
         },
-      },
-      ticketNumber
-    });
+        ticketNumber,
+      }
+    );
     return payedTikets[0] ?? null;
   }
 
