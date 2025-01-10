@@ -33,7 +33,7 @@ export class TicketController {
     private readonly operationResultMapper: OperationResultMapper
   ) {}
 
-  @Get("/operations/results")
+  @Get("/operations/results/all")
   @ApiPagination()
   @Authenticated()
   @ApiJfds({
@@ -41,10 +41,12 @@ export class TicketController {
     type: [OperationResult],
   })
   async getOperationResults(@Pagination() pagination: PaginationParams) {
-    const payedTikets =
+    const operationResults =
       await this.ticketService.getOperationResults(pagination);
     return Promise.all(
-      payedTikets.map((role) => this.operationResultMapper.serviceToRest(role))
+      operationResults.map((operationResult) =>
+        this.operationResultMapper.serviceToRest(operationResult)
+      )
     );
   }
 
