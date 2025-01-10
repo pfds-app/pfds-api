@@ -32,7 +32,7 @@ paths:
             type: number
             default: 10
             minimum: 1
-            maximum: 200
+            maximum: 500
       responses:
         '200':
           description: ''
@@ -87,7 +87,7 @@ paths:
             type: number
             default: 10
             minimum: 1
-            maximum: 200
+            maximum: 500
       responses:
         '200':
           description: ''
@@ -278,7 +278,7 @@ paths:
             type: number
             default: 10
             minimum: 1
-            maximum: 200
+            maximum: 500
       responses:
         '200':
           description: ''
@@ -483,7 +483,7 @@ paths:
             type: number
             default: 10
             minimum: 1
-            maximum: 200
+            maximum: 500
       responses:
         '200':
           description: ''
@@ -590,7 +590,7 @@ paths:
             type: number
             default: 10
             minimum: 1
-            maximum: 200
+            maximum: 500
       responses:
         '200':
           description: ''
@@ -790,7 +790,7 @@ paths:
             type: number
             default: 10
             minimum: 1
-            maximum: 200
+            maximum: 500
       responses:
         '200':
           description: ''
@@ -990,7 +990,7 @@ paths:
             type: number
             default: 10
             minimum: 1
-            maximum: 200
+            maximum: 500
       responses:
         '200':
           description: ''
@@ -1190,7 +1190,7 @@ paths:
             type: number
             default: 10
             minimum: 1
-            maximum: 200
+            maximum: 500
       responses:
         '200':
           description: ''
@@ -1390,7 +1390,7 @@ paths:
             type: number
             default: 10
             minimum: 1
-            maximum: 200
+            maximum: 500
       responses:
         '200':
           description: ''
@@ -1590,7 +1590,7 @@ paths:
             type: number
             default: 10
             minimum: 1
-            maximum: 200
+            maximum: 500
       responses:
         '200':
           description: ''
@@ -1790,7 +1790,7 @@ paths:
             type: number
             default: 10
             minimum: 1
-            maximum: 200
+            maximum: 500
       responses:
         '200':
           description: ''
@@ -1990,7 +1990,7 @@ paths:
             type: number
             default: 10
             minimum: 1
-            maximum: 200
+            maximum: 500
       responses:
         '200':
           description: ''
@@ -2167,6 +2167,63 @@ paths:
       summary: ''
       tags:
         - Moneys
+  /operations/results:
+    get:
+      operationId: getOperationResults
+      parameters:
+        - name: page
+          required: false
+          in: query
+          schema:
+            type: number
+            minimum: 1
+            default: 1
+        - name: pageSize
+          required: false
+          in: query
+          schema:
+            type: number
+            default: 10
+            minimum: 1
+            maximum: 500
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OperationResult'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+      security:
+        - bearer: []
+      summary: ''
+      tags:
+        - Moneys
   /operations/{operationId}/staffs:
     get:
       operationId: getAllOperationStaffs
@@ -2237,7 +2294,7 @@ paths:
             type: number
             default: 10
             minimum: 1
-            maximum: 200
+            maximum: 500
       responses:
         '200':
           description: ''
@@ -2294,7 +2351,7 @@ paths:
             type: number
             default: 10
             minimum: 1
-            maximum: 200
+            maximum: 500
       responses:
         '200':
           description: ''
@@ -2499,7 +2556,7 @@ paths:
             type: number
             default: 10
             minimum: 1
-            maximum: 200
+            maximum: 500
       responses:
         '200':
           description: ''
@@ -3079,6 +3136,19 @@ components:
         - operationDate
         - createdAt
         - updatedAt
+    OperationResult:
+      type: object
+      properties:
+        operation:
+          $ref: '#/components/schemas/Operation'
+        numberOfDistributed:
+          type: number
+        sumOfDistributed:
+          type: string
+      required:
+        - operation
+        - numberOfDistributed
+        - sumOfDistributed
     Ticket:
       type: object
       properties:
