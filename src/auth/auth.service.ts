@@ -24,15 +24,11 @@ export class AuthService {
     adminApiKey,
     ...signupPayload
   }: SignupPayload): Promise<Whoami> {
-    const currentUserLength = await this.userService.findAll(
-      { page: 1, pageSize: 1 },
-      {}
-    );
     if (
-      currentUserLength.length > 0 ||
+      !(await this.allowAdminSignup()) ||
       adminApiKey !== process.env.ADMIN_API_KEY
     ) {
-      throw new ForbiddenException("Bad credentials");
+      throw new ForbiddenException("Invalid credentials");
     }
 
     const user = await this.userMapper.createToDomain(signupPayload);
@@ -67,5 +63,10 @@ export class AuthService {
     };
     const token = this.jwtService.sign(jwtPayload);
     return this.whoami(token, user);
+  }
+
+  async allowAdminSignup() {
+    const users = await this.userService.findAll({ page: 1, pageSize: 1 }, {});
+    return !(users.length > 0);
   }
 }

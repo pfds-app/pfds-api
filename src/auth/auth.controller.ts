@@ -51,4 +51,13 @@ export class AuthController {
   async signup(@Body() signupPayload: SignupPayload) {
     return this.authService.signup(signupPayload);
   }
+
+  @Get("/admin-signup/allows")
+  @ApiJfds({
+    type: Boolean,
+    operationId: "allowAdminSignup",
+  })
+  async allowAdminSignup() {
+    return this.authService.allowAdminSignup();
+  }
 }
