@@ -621,6 +621,50 @@ paths:
       summary: ''
       tags:
         - Users
+  /users/infos:
+    put:
+      operationId: updateUserInfo
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUser'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+      summary: ''
+      tags:
+        - Users
   /sacraments:
     get:
       operationId: getSacraments
@@ -2905,8 +2949,6 @@ components:
           type: string
         nic:
           type: string
-        photo:
-          type: string
         birthDate:
           type: string
           format: date
@@ -3003,6 +3045,55 @@ components:
       required:
         - message
         - fileName
+    UpdateUser:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        email:
+          type: string
+        username:
+          type: string
+        firstName:
+          type: string
+        lastName:
+          type: string
+        nic:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        address:
+          type: string
+        gender:
+          type: string
+          enum:
+            - MALE
+            - FEMALE
+        apv:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+        roleId:
+          type: string
+          format: uuid
+      required:
+        - id
+        - email
+        - username
+        - firstName
+        - lastName
+        - birthDate
+        - address
+        - gender
+        - createdAt
+        - updatedAt
+        - roleId
     Sacrament:
       type: object
       properties:

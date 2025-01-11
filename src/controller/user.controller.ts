@@ -15,7 +15,12 @@ import { UserService } from "src/service";
 import { Authenticated } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { UserMapper } from "./mapper";
-import { ProfilePicture, UploadeSuccessResponse, User } from "./rest";
+import {
+  ProfilePicture,
+  UpdateUser,
+  UploadeSuccessResponse,
+  User,
+} from "./rest";
 
 @Controller()
 @ApiTags("Users")
@@ -87,5 +92,19 @@ export class UserController {
     @Body() profilePicture: ProfilePicture
   ) {
     return this.userService.updateProfilePicture(id, profilePicture.file);
+  }
+
+  @Put("/users/infos")
+  @ApiBody({
+    type: UpdateUser,
+  })
+  @ApiJfds({
+    operationId: "updateUserInfo",
+    type: User,
+  })
+  async updateUser(@Body() updateUser: UpdateUser) {
+    const mappedUser = await this.userMapper.updateToDomain(updateUser);
+    const user = await this.userService.updateUserInfos(mappedUser);
+    return this.userMapper.toRest(user);
   }
 }

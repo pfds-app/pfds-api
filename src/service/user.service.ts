@@ -91,4 +91,8 @@ export class UserService {
       message: "File uploaded with success",
     };
   }
+
+  async updateUserInfos(user: User): Promise<User> {
+    return this.repository.save(user);
+  }
 }

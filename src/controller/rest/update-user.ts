@@ -36,11 +36,6 @@ export class UpdateUser {
   @ApiProperty({ required: false })
   nic?: string;
 
-  @IsOptional()
-  @IsString()
-  @ApiProperty({ required: false })
-  photo?: string;
-
   @IsDateString()
   @ApiProperty({ format: "date" })
   birthDate: string;

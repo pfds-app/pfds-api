@@ -46,6 +46,7 @@ export class UserMapper {
       id,
       role: await this.roleMapper.toDomain(role),
       password: beforeUpdateEntityUser.password,
+      photo: beforeUpdateEntityUser.photo,
       ...baseEntityUser,
     });
   }
