@@ -20,7 +20,21 @@ export class AuthService {
     return { ...restUser, token };
   }
 
-  async signup(signupPayload: SignupPayload): Promise<Whoami> {
+  async signup({
+    adminApiKey,
+    ...signupPayload
+  }: SignupPayload): Promise<Whoami> {
+    const currentUserLength = await this.userService.findAll(
+      { page: 1, pageSize: 1 },
+      {}
+    );
+    if (
+      currentUserLength.length > 0 ||
+      adminApiKey !== process.env.ADMIN_API_KEY
+    ) {
+      throw new ForbiddenException("Bad credentials");
+    }
+
     const user = await this.userMapper.createToDomain(signupPayload);
     const savedUser = await this.userService.createUser(user);
     return this.domainUserToWhoami(savedUser);

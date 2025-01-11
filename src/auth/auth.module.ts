@@ -8,9 +8,21 @@ import { AuthService } from "./auth.service";
 import { AuthController } from "./auth.controller";
 import { JwtStrategy } from "./startegy";
 import { JwtAuthGuard } from "./guards";
-import { Role, User } from "src/model";
-import { RoleService, UserService } from "src/service";
-import { RoleMapper, UserMapper } from "src/controller/mapper";
+import { Association, Committee, Region, Role, User } from "src/model";
+import {
+  AssociationService,
+  CommitteeService,
+  RegionService,
+  RoleService,
+  UserService,
+} from "src/service";
+import {
+  AssociationMapper,
+  CommitteeMapper,
+  RegionMapper,
+  RoleMapper,
+  UserMapper,
+} from "src/controller/mapper";
 
 @Module({
   imports: [
@@ -27,7 +39,7 @@ import { RoleMapper, UserMapper } from "src/controller/mapper";
         };
       },
     }),
-    TypeOrmModule.forFeature([Role, User]),
+    TypeOrmModule.forFeature([Role, User, Association, Committee, Region]),
   ],
   providers: [
     JwtAuthGuard,
@@ -37,6 +49,12 @@ import { RoleMapper, UserMapper } from "src/controller/mapper";
     RoleMapper,
     UserMapper,
     UserService,
+    CommitteeService,
+    CommitteeMapper,
+    RegionService,
+    RegionMapper,
+    AssociationService,
+    AssociationMapper,
   ],
   controllers: [AuthController],
 })

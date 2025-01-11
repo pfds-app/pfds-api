@@ -9,6 +9,9 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { Role } from "./role.entity";
+import { Region } from "./region.entity";
+import { Committee } from "./committee.entity";
+import { Association } from "./association.entity";
 
 export enum UserGender {
   MALE = "MALE",
@@ -32,10 +35,10 @@ export class User {
   @Column({ name: "last_name" })
   lastName: string;
 
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   nic?: string;
 
-  @Column()
+  @Column({ nullable: true })
   photo?: string;
 
   @Column({ name: "birth_date", type: "date" })
@@ -47,7 +50,7 @@ export class User {
   @Column({ type: "enum", enum: UserGender })
   gender: UserGender;
 
-  @Column()
+  @Column({ nullable: true })
   apv?: string;
 
   @Column()
@@ -70,6 +73,27 @@ export class User {
 
   @ManyToOne(() => Role, { eager: true, nullable: false, onDelete: "CASCADE" })
   role: Role;
+
+  @ManyToOne(() => Region, {
+    eager: true,
+    nullable: false,
+    onDelete: "CASCADE",
+  })
+  region: Region;
+
+  @ManyToOne(() => Committee, {
+    eager: true,
+    nullable: false,
+    onDelete: "CASCADE",
+  })
+  committee: Committee;
+
+  @ManyToOne(() => Association, {
+    eager: true,
+    nullable: false,
+    onDelete: "CASCADE",
+  })
+  association: Association;
 
   @BeforeInsert()
   async hashPasswordBeforeInsert() {

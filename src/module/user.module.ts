@@ -7,11 +7,17 @@ import { AuthModule } from "src/auth";
 import { User } from "src/model";
 import { RoleModule } from "./role.module";
 import { NestjsFormDataModule } from "nestjs-form-data";
+import { AssociationModule } from "./association.module";
+import { RegionModule } from "./region.module";
+import { CommitteeModule } from "./committee.module";
 
 @Module({
   imports: [
     NestjsFormDataModule,
     RoleModule,
+    AssociationModule,
+    RegionModule,
+    CommitteeModule,
     AuthModule,
     TypeOrmModule.forFeature([User]),
   ],

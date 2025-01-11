@@ -64,4 +64,16 @@ export class UpdateUser {
   @IsUUID()
   @ApiProperty({ format: "uuid" })
   roleId: string;
+
+  @IsUUID()
+  @ApiProperty({ format: "uuid" })
+  regionId: string;
+
+  @IsUUID()
+  @ApiProperty({ format: "uuid" })
+  committeeId: string;
+
+  @IsUUID()
+  @ApiProperty({ format: "uuid" })
+  associationId: string;
 }

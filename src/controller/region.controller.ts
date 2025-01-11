@@ -27,7 +27,6 @@ export class RegionController {
 
   @Get("/regions")
   @ApiPagination()
-  @Authenticated()
   @ApiCriteria({ name: "name", type: "string" })
   @ApiJfds({
     operationId: "getRegions",
@@ -44,7 +43,6 @@ export class RegionController {
   }
 
   @Get("/regions/:id")
-  @Authenticated()
   @ApiJfds({
     operationId: "getRegionById",
     type: Region,

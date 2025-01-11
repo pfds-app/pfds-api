@@ -2,6 +2,9 @@ import { ApiProperty } from "@nestjs/swagger";
 
 import { UserGender } from "src/model";
 import { Role } from "./role";
+import { Committee } from "./committee";
+import { Association } from "./association";
+import { Region } from "./region";
 
 export class User {
   @ApiProperty({ format: "uuid" })
@@ -45,4 +48,13 @@ export class User {
 
   @ApiProperty({ type: Role })
   role: Role;
+
+  @ApiProperty({ type: Committee })
+  committee: Committee;
+
+  @ApiProperty({ type: Region })
+  region: Region;
+
+  @ApiProperty({ type: Association })
+  association: Association;
 }
