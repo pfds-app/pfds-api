@@ -16,3 +16,5 @@ export * from "./payed-ticket";
 export * from "./crupdate-ticket";
 export * from "./ticket-status";
 export * from "./operation-result";
+export * from "./uploade-success-response";
+export * from "./profile-picture";

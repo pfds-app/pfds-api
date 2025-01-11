@@ -6,9 +6,15 @@ import { UserMapper } from "src/controller/mapper";
 import { AuthModule } from "src/auth";
 import { User } from "src/model";
 import { RoleModule } from "./role.module";
+import { NestjsFormDataModule } from "nestjs-form-data";
 
 @Module({
-  imports: [RoleModule, AuthModule, TypeOrmModule.forFeature([User])],
+  imports: [
+    NestjsFormDataModule,
+    RoleModule,
+    AuthModule,
+    TypeOrmModule.forFeature([User]),
+  ],
   controllers: [UserController],
   providers: [UserService, UserMapper],
   exports: [UserService, UserMapper],

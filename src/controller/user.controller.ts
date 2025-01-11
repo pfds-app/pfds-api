@@ -1,18 +1,21 @@
 import {
+  Body,
   Controller,
   Get,
   NotFoundException,
   Param,
+  Put,
   Query,
 } from "@nestjs/common";
-import { ApiTags } from "@nestjs/swagger";
+import { ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
+import { FormDataRequest } from "nestjs-form-data";
 
 import { ApiCriteria, ApiJfds, ApiPagination } from "src/docs/decorators";
 import { UserService } from "src/service";
 import { Authenticated } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { UserMapper } from "./mapper";
-import { User } from "./rest";
+import { ProfilePicture, UploadeSuccessResponse, User } from "./rest";
 
 @Controller()
 @ApiTags("Users")
@@ -57,5 +60,32 @@ export class UserController {
       throw new NotFoundException();
     }
     return this.userMapper.toRest(user);
+  }
+
+  @Put("/users/:id/picture/raw")
+  @FormDataRequest()
+  @ApiConsumes("multipart/form-data")
+  @ApiBody({
+    description: "Upload a user profile picture",
+    required: true,
+    schema: {
+      type: "object",
+      properties: {
+        file: {
+          type: "string",
+          format: "binary",
+        },
+      },
+    },
+  })
+  @ApiJfds({
+    operationId: "updateProfilePicture",
+    type: UploadeSuccessResponse,
+  })
+  async updateProfilePicture(
+    @Param("id") id: string,
+    @Body() profilePicture: ProfilePicture
+  ) {
+    return this.userService.updateProfilePicture(id, profilePicture.file);
   }
 }

@@ -567,6 +567,60 @@ paths:
       summary: ''
       tags:
         - Users
+  /users/{id}/picture/raw:
+    put:
+      operationId: updateProfilePicture
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        description: Upload a user profile picture
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadeSuccessResponse'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+      summary: ''
+      tags:
+        - Users
   /sacraments:
     get:
       operationId: getSacraments
@@ -2939,6 +2993,16 @@ components:
         - createdAt
         - updatedAt
         - role
+    UploadeSuccessResponse:
+      type: object
+      properties:
+        message:
+          type: string
+        fileName:
+          type: string
+      required:
+        - message
+        - fileName
     Sacrament:
       type: object
       properties:

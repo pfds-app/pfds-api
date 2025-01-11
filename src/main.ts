@@ -28,7 +28,11 @@ async function bootstrap() {
     logger: ["error", "warn", "log", "verbose", "fatal"],
   });
   setupSwagger(app);
-  app.useGlobalPipes(new ValidationPipe());
+  app.useGlobalPipes(
+    new ValidationPipe({
+      transform: true,
+    })
+  );
   app.enableCors();
   await app.listen(+(process.env.PORT || 3000));
 }
