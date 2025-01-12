@@ -8,7 +8,6 @@ import { DatabaseModule } from "./module/database";
 import { AuthModule } from "./auth";
 import {
   HealthModule,
-  RoleModule,
   UserModule,
   SacramentModule,
   RegionModule,
@@ -34,7 +33,6 @@ import {
     }),
     DatabaseModule,
     HealthModule,
-    RoleModule,
     UserModule,
     AuthModule,
     SacramentModule,
@@ -49,4 +47,4 @@ import {
     PayedTicketModule,
   ],
 })
-export class JfdsModule {}
+export class JfdsModule { }

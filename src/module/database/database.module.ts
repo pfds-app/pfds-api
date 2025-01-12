@@ -8,7 +8,6 @@ import {
   Dummy,
   Region,
   Responsability,
-  Role,
   Sacrament,
   User,
   Event,
@@ -28,7 +27,6 @@ import {
         entities: [
           Dummy,
           User,
-          Role,
           Sacrament,
           Region,
           Committee,
@@ -46,4 +44,4 @@ import {
     }),
   ],
 })
-export class DatabaseModule {}
+export class DatabaseModule { }

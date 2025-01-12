@@ -8,19 +8,19 @@ import { AuthService } from "./auth.service";
 import { AuthController } from "./auth.controller";
 import { JwtStrategy } from "./startegy";
 import { JwtAuthGuard } from "./guards";
-import { Association, Committee, Region, Role, User } from "src/model";
+import { Association, Committee, Region, Responsability, User } from "src/model";
 import {
   AssociationService,
   CommitteeService,
   RegionService,
-  RoleService,
+  ResponsabilityService,
   UserService,
 } from "src/service";
 import {
   AssociationMapper,
   CommitteeMapper,
   RegionMapper,
-  RoleMapper,
+  ResponsabilityMapper,
   UserMapper,
 } from "src/controller/mapper";
 
@@ -34,19 +34,19 @@ import {
           secret: configService.get("JWT_SECRET"),
           signOptions: {
             // 5m | 5h | 5d
-            expiresIn: "5h",
+            expiresIn: configService.get("JWT_EXPIRATION_TIME"),
           },
         };
       },
     }),
-    TypeOrmModule.forFeature([Role, User, Association, Committee, Region]),
+    TypeOrmModule.forFeature([Responsability, User, Association, Committee, Region]),
   ],
   providers: [
     JwtAuthGuard,
     JwtStrategy,
     AuthService,
-    RoleService,
-    RoleMapper,
+    ResponsabilityService,
+    ResponsabilityMapper,
     UserMapper,
     UserService,
     CommitteeService,
@@ -58,4 +58,4 @@ import {
   ],
   controllers: [AuthController],
 })
-export class AuthModule {}
+export class AuthModule { }

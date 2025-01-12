@@ -1,10 +1,10 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-import { UserGender } from "src/model";
-import { Role } from "./role";
+import { Role, UserGender } from "src/model";
 import { Committee } from "./committee";
 import { Association } from "./association";
 import { Region } from "./region";
+import { Responsability } from "./responsability";
 
 export class User {
   @ApiProperty({ format: "uuid" })
@@ -37,6 +37,9 @@ export class User {
   @ApiProperty({ enum: UserGender })
   gender: UserGender;
 
+  @ApiProperty({ enum: Role })
+  role: Role;
+
   @ApiProperty({ required: false })
   apv?: string;
 
@@ -46,8 +49,8 @@ export class User {
   @ApiProperty({ format: "date-time" })
   updatedAt: string;
 
-  @ApiProperty({ type: Role })
-  role: Role;
+  @ApiProperty({ type: Responsability })
+  responsability: Responsability;
 
   @ApiProperty({ type: Committee })
   committee: Committee;

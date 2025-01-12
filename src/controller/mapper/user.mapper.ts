@@ -8,9 +8,9 @@ import {
   AssociationService,
   CommitteeService,
   RegionService,
-  RoleService,
+  ResponsabilityService,
 } from "src/service";
-import { RoleMapper } from "./role.mapper";
+import { ResponsabilityMapper } from "./responsability.mapper";
 import { AssociationMapper } from "./association.mapper";
 import { RegionMapper } from "./region.mapper";
 import { CommitteeMapper } from "./committee.mapper";
@@ -24,11 +24,11 @@ export class UserMapper {
     private readonly regionMapper: RegionMapper,
     private readonly committeeService: CommitteeService,
     private readonly committeeMapper: CommitteeMapper,
-    private readonly roleService: RoleService,
-    private readonly roleMapper: RoleMapper,
+    private readonly responsabilityService: ResponsabilityService,
+    private readonly responsabilityMapper: ResponsabilityMapper,
     @InjectRepository(EntityUser)
     private readonly userRepository: Repository<EntityUser>
-  ) {}
+  ) { }
 
   async toRest(user: EntityUser): Promise<User> {
     const copiedEntityUser = { ...user };
@@ -40,7 +40,7 @@ export class UserMapper {
     regionId,
     associationId,
     committeeId,
-    roleId,
+    responsabilityId,
     id,
     ...baseEntityUser
   }: UpdateUser): Promise<EntityUser> {
@@ -48,7 +48,7 @@ export class UserMapper {
     const region = await this.regionService.findById(regionId);
     const association = await this.associationService.findById(associationId);
     const committee = await this.committeeService.findById(committeeId);
-    const role = await this.roleService.findById(roleId);
+    const responsability = await this.responsabilityService.findById(responsabilityId);
 
     if (!beforeUpdateEntityUser) {
       throw new BadRequestException(
@@ -56,9 +56,9 @@ export class UserMapper {
       );
     }
 
-    if (!role) {
+    if (!responsability) {
       throw new BadRequestException(
-        "Role with id=" + roleId + " does not exist"
+        "Responsability with id=" + responsabilityId + " does not exist"
       );
     }
 
@@ -82,7 +82,7 @@ export class UserMapper {
 
     return this.userRepository.create({
       id,
-      role: await this.roleMapper.toDomain(role),
+      responsability: await this.responsabilityMapper.toDomain(responsability),
       committee: await this.committeeMapper.toDomain(committee),
       region: await this.regionMapper.toDomain(region),
       association: await this.associationMapper.toDomain(association),
@@ -93,20 +93,20 @@ export class UserMapper {
   }
 
   async createToDomain({
-    roleId,
+    responsabilityId,
     committeeId,
     associationId,
     regionId,
     ...baseEntityUser
   }: CreateUser): Promise<EntityUser> {
-    const role = await this.roleService.findById(roleId);
+    const responsability = await this.responsabilityService.findById(responsabilityId);
     const region = await this.regionService.findById(regionId);
     const association = await this.associationService.findById(associationId);
     const committee = await this.committeeService.findById(committeeId);
 
-    if (!role) {
+    if (!responsability) {
       throw new BadRequestException(
-        "Role with id=" + roleId + " does not exist"
+        "Responsability with id=" + responsabilityId + " does not exist"
       );
     }
 
@@ -130,7 +130,7 @@ export class UserMapper {
 
     return this.userRepository.create({
       ...baseEntityUser,
-      role,
+      responsability,
       committee,
       region,
       association,

@@ -8,7 +8,7 @@ import {
   IsUUID,
 } from "class-validator";
 
-import { UserGender } from "src/model";
+import { Role, UserGender } from "src/model";
 
 export class UpdateUser {
   @IsUUID()
@@ -48,6 +48,10 @@ export class UpdateUser {
   @ApiProperty({ enum: UserGender })
   gender: UserGender;
 
+  @IsEnum(Role)
+  @ApiProperty({ enum: Role })
+  role: Role;
+
   @IsOptional()
   @IsString()
   @ApiProperty({ required: false })
@@ -63,7 +67,7 @@ export class UpdateUser {
 
   @IsUUID()
   @ApiProperty({ format: "uuid" })
-  roleId: string;
+  responsabilityId: string;
 
   @IsUUID()
   @ApiProperty({ format: "uuid" })

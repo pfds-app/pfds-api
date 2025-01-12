@@ -8,15 +8,12 @@ import {
   PrimaryColumn,
   UpdateDateColumn,
 } from "typeorm";
-import { Role } from "./role.entity";
+import { Role } from "./role.enum";
 import { Region } from "./region.entity";
 import { Committee } from "./committee.entity";
 import { Association } from "./association.entity";
-
-export enum UserGender {
-  MALE = "MALE",
-  FEMALE = "FEMALE",
-}
+import { UserGender } from "./user-genger.enum";
+import { Responsability } from "./responsability.entity";
 
 @Entity()
 export class User {
@@ -56,6 +53,9 @@ export class User {
   @Column()
   password: string;
 
+  @Column({ type: "enum", enum: Role })
+  role: Role;
+
   @CreateDateColumn({
     name: "created_at",
     type: "timestamp without time zone",
@@ -70,9 +70,6 @@ export class User {
     onUpdate: "CURRENT_TIMESTAMP",
   })
   updatedAt: string;
-
-  @ManyToOne(() => Role, { eager: true, nullable: false, onDelete: "CASCADE" })
-  role: Role;
 
   @ManyToOne(() => Region, {
     eager: true,
@@ -94,6 +91,13 @@ export class User {
     onDelete: "CASCADE",
   })
   association: Association;
+
+  @ManyToOne(() => Responsability, {
+    eager: true,
+    nullable: false,
+    onDelete: "CASCADE",
+  })
+  responsability: Responsability;
 
   @BeforeInsert()
   async hashPasswordBeforeInsert() {
