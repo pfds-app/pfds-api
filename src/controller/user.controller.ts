@@ -23,6 +23,7 @@ import {
   UploadeSuccessResponse,
   User,
 } from "./rest";
+import { Role } from "src/model";
 
 @Controller()
 @ApiTags("Users")
@@ -36,8 +37,9 @@ export class UserController {
   @Authenticated()
   @ApiPagination()
   @ApiCriteria(
-    { name: "lastName", type: "string" },
-    { name: "firstName", type: "string" }
+    {
+      name: "role", type: "string", enum: Role
+    }
   )
   @ApiJfds({
     operationId: "getUsers",
@@ -45,12 +47,10 @@ export class UserController {
   })
   async findAll(
     @Pagination() pagination: PaginationParams,
-    @Query("lastName") lastName?: string,
-    @Query("firstName") firstName?: string
+    @Query("role") role?: Role
   ) {
     const users = await this.userService.findAll(pagination, {
-      lastName,
-      firstName,
+      role
     });
     return Promise.all(users.map((user) => this.userMapper.toRest(user)));
   }

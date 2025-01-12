@@ -297,15 +297,16 @@ paths:
     get:
       operationId: getUsers
       parameters:
-        - name: lastName
+        - name: role
           required: false
           in: query
           schema:
-            type: string
-        - name: firstName
-          required: false
-          in: query
-          schema:
+            enum:
+              - ADMIN
+              - REGION_MANAGER
+              - COMMITTEE_MANAGER
+              - ASSOCIATION_MANAGER
+              - SIMPLE_USER
             type: string
         - name: page
           required: false
