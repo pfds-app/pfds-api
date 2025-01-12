@@ -7,7 +7,6 @@ import {
   IsString,
   IsUUID,
 } from "class-validator";
-
 import { Role, UserGender } from "src/model";
 
 export class UpdateUser {
@@ -31,11 +30,6 @@ export class UpdateUser {
   @ApiProperty()
   lastName: string;
 
-  @IsOptional()
-  @IsString()
-  @ApiProperty({ required: false })
-  nic?: string;
-
   @IsDateString()
   @ApiProperty({ format: "date" })
   birthDate: string;
@@ -52,11 +46,6 @@ export class UpdateUser {
   @ApiProperty({ enum: Role })
   role: Role;
 
-  @IsOptional()
-  @IsString()
-  @ApiProperty({ required: false })
-  apv?: string;
-
   @IsDateString()
   @ApiProperty({ format: "date-time" })
   createdAt: string;
@@ -65,19 +54,33 @@ export class UpdateUser {
   @ApiProperty({ format: "date-time" })
   updatedAt: string;
 
-  @IsUUID()
-  @ApiProperty({ format: "uuid" })
-  responsabilityId: string;
+  @IsOptional()
+  @IsString()
+  @ApiProperty({ required: false })
+  nic?: string;
 
-  @IsUUID()
-  @ApiProperty({ format: "uuid" })
-  regionId: string;
+  @IsOptional()
+  @IsString()
+  @ApiProperty({ required: false })
+  apv?: string;
 
+  @IsOptional()
   @IsUUID()
-  @ApiProperty({ format: "uuid" })
-  committeeId: string;
+  @ApiProperty({ format: "uuid", required: false })
+  responsabilityId?: string;
 
+  @IsOptional()
   @IsUUID()
-  @ApiProperty({ format: "uuid" })
-  associationId: string;
+  @ApiProperty({ format: "uuid", required: false })
+  regionId?: string;
+
+  @IsOptional()
+  @IsUUID()
+  @ApiProperty({ format: "uuid", required: false })
+  committeeId?: string;
+
+  @IsOptional()
+  @IsUUID()
+  @ApiProperty({ format: "uuid", required: false })
+  associationId?: string;
 }

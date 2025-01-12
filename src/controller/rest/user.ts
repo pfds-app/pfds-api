@@ -22,12 +22,6 @@ export class User {
   @ApiProperty()
   lastName: string;
 
-  @ApiProperty({ required: false })
-  nic?: string;
-
-  @ApiProperty({ required: false })
-  photo?: string;
-
   @ApiProperty({ format: "date" })
   birthDate: string;
 
@@ -40,24 +34,30 @@ export class User {
   @ApiProperty({ enum: Role })
   role: Role;
 
-  @ApiProperty({ required: false })
-  apv?: string;
-
   @ApiProperty({ format: "date-time" })
   createdAt: string;
 
   @ApiProperty({ format: "date-time" })
   updatedAt: string;
 
-  @ApiProperty({ type: Responsability })
-  responsability: Responsability;
+  @ApiProperty({ required: false })
+  nic?: string;
 
-  @ApiProperty({ type: Committee })
-  committee: Committee;
+  @ApiProperty({ required: false })
+  photo?: string;
 
-  @ApiProperty({ type: Region })
-  region: Region;
+  @ApiProperty({ required: false })
+  apv?: string;
 
-  @ApiProperty({ type: Association })
-  association: Association;
+  @ApiProperty({ type: Responsability, required: false })
+  responsability?: Responsability;
+
+  @ApiProperty({ type: Committee, required: false })
+  committee?: Committee;
+
+  @ApiProperty({ type: Region, required: false })
+  region?: Region;
+
+  @ApiProperty({ type: Association, required: false })
+  association?: Association;
 }

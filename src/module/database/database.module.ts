@@ -44,4 +44,4 @@ import {
     }),
   ],
 })
-export class DatabaseModule { }
+export class DatabaseModule {}

@@ -47,4 +47,4 @@ import {
     PayedTicketModule,
   ],
 })
-export class JfdsModule { }
+export class JfdsModule {}

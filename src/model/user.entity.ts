@@ -73,31 +73,31 @@ export class User {
 
   @ManyToOne(() => Region, {
     eager: true,
-    nullable: false,
+    nullable: true,
     onDelete: "CASCADE",
   })
-  region: Region;
+  region?: Region;
 
   @ManyToOne(() => Committee, {
     eager: true,
-    nullable: false,
+    nullable: true,
     onDelete: "CASCADE",
   })
-  committee: Committee;
+  committee?: Committee;
 
   @ManyToOne(() => Association, {
     eager: true,
-    nullable: false,
+    nullable: true,
     onDelete: "CASCADE",
   })
-  association: Association;
+  association?: Association;
 
   @ManyToOne(() => Responsability, {
     eager: true,
-    nullable: false,
+    nullable: true,
     onDelete: "CASCADE",
   })
-  responsability: Responsability;
+  responsability?: Responsability;
 
   @BeforeInsert()
   async hashPasswordBeforeInsert() {

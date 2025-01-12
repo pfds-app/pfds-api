@@ -15,13 +15,15 @@ import { User } from "src/model";
 import { PaginationParams } from "src/controller/decorators";
 import { Criteria } from "./utils/criteria";
 import { UploadeSuccessResponse } from "src/controller/rest";
-import { UPDATED_AT_CREATED_AT_ORDER_BY } from "./utils/default-order-by";
+import { UserValidator } from "./validator/user.validator";
 import { findByCriteria } from "./utils/find-by-cireria";
+import { UPDATED_AT_CREATED_AT_ORDER_BY } from "./utils/default-order-by";
 
 @Injectable()
 export class UserService {
   constructor(
-    @InjectRepository(User) private readonly repository: Repository<User>
+    @InjectRepository(User) private readonly repository: Repository<User>,
+    private readonly userValidator: UserValidator
   ) {}
 
   async findAll(pagination: PaginationParams, criteria: Criteria<User>) {
@@ -41,8 +43,10 @@ export class UserService {
     if (await this.findById(user.id)) {
       throw new BadRequestException("User with the given id already exist");
     }
-    user.photo = undefined; // should not set profile image only with updateProfilePicture
-    const createdUser = this.repository.create(user);
+
+    await this.userValidator.checkRequiredFieldsByRole(user);
+    user.photo = undefined; // should not set profile image (only with updateProfilePicture)
+    const createdUser = this.repository.create(user); // just to make the password will be hashed
     return this.repository.save(createdUser);
   }
 
@@ -93,6 +97,7 @@ export class UserService {
   }
 
   async updateUserInfos(user: User): Promise<User> {
+    await this.userValidator.checkRequiredFieldsByRole(user);
     return this.repository.save(user);
   }
 }

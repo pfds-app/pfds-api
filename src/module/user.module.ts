@@ -10,6 +10,7 @@ import { AssociationModule } from "./association.module";
 import { RegionModule } from "./region.module";
 import { CommitteeModule } from "./committee.module";
 import { ResponsabilityModule } from "./responsability.module";
+import { UserValidator } from "src/service/validator/user.validator";
 
 @Module({
   imports: [
@@ -22,7 +23,7 @@ import { ResponsabilityModule } from "./responsability.module";
     TypeOrmModule.forFeature([User]),
   ],
   controllers: [UserController],
-  providers: [UserService, UserMapper],
-  exports: [UserService, UserMapper],
+  providers: [UserService, UserMapper, UserValidator],
+  exports: [UserService, UserMapper, UserValidator],
 })
-export class UserModule { }
+export class UserModule {}

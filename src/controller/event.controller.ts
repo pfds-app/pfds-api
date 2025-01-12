@@ -16,6 +16,7 @@ import { Authenticated } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { Event } from "./rest";
 import { EventMapper } from "./mapper";
+import { MoreThanOrEqual } from "typeorm";
 
 @Controller()
 @ApiTags("Resources")
@@ -28,17 +29,22 @@ export class EventController {
   @Get("/events")
   @ApiPagination()
   @Authenticated()
-  @ApiCriteria({ name: "name", type: "string" })
+  @ApiCriteria(
+    { name: "name", type: "string" },
+    { name: "afterDate", type: "string", format: "date" }
+  )
   @ApiJfds({
     operationId: "getEvents",
     type: [Event],
   })
   async findAll(
     @Pagination() pagination: PaginationParams,
-    @Query("name") name?: string
+    @Query("name") name?: string,
+    @Query("afterDate") afterDate?: string
   ) {
     const events = await this.eventService.findAll(pagination, {
       name,
+      beginDate: afterDate ? MoreThanOrEqual(afterDate) : undefined,
     });
     return Promise.all(events.map((role) => this.eventMapper.toRest(role)));
   }

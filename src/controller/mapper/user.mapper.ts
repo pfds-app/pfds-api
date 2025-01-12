@@ -3,7 +3,13 @@ import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 
 import { User, CreateUser, UpdateUser } from "../rest";
-import { User as EntityUser } from "src/model";
+import {
+  Association,
+  Committee,
+  User as EntityUser,
+  Region,
+  Responsability,
+} from "src/model";
 import {
   AssociationService,
   CommitteeService,
@@ -28,7 +34,7 @@ export class UserMapper {
     private readonly responsabilityMapper: ResponsabilityMapper,
     @InjectRepository(EntityUser)
     private readonly userRepository: Repository<EntityUser>
-  ) { }
+  ) {}
 
   async toRest(user: EntityUser): Promise<User> {
     const copiedEntityUser = { ...user };
@@ -45,47 +51,45 @@ export class UserMapper {
     ...baseEntityUser
   }: UpdateUser): Promise<EntityUser> {
     const beforeUpdateEntityUser = await this.userRepository.findOneBy({ id });
-    const region = await this.regionService.findById(regionId);
-    const association = await this.associationService.findById(associationId);
-    const committee = await this.committeeService.findById(committeeId);
-    const responsability = await this.responsabilityService.findById(responsabilityId);
-
     if (!beforeUpdateEntityUser) {
       throw new BadRequestException(
         "EntityUser with id=" + id + " does not exist"
       );
     }
 
-    if (!responsability) {
-      throw new BadRequestException(
-        "Responsability with id=" + responsabilityId + " does not exist"
-      );
+    let region: Region;
+    if (regionId) {
+      region = await this.regionService.findById(regionId);
     }
 
-    if (!region) {
-      throw new BadRequestException(
-        "Region with id=" + regionId + " does not exist"
-      );
+    let association: Association;
+    if (associationId) {
+      association = await this.associationService.findById(associationId);
     }
 
-    if (!association) {
-      throw new BadRequestException(
-        "Association with id=" + associationId + " does not exist"
-      );
+    let committee: Committee;
+    if (committeeId) {
+      committee = await this.committeeService.findById(committeeId);
     }
 
-    if (!committee) {
-      throw new BadRequestException(
-        "Committee with id=" + committeeId + " does not exist"
-      );
+    let responsability: Responsability;
+    if (responsabilityId) {
+      responsability =
+        await this.responsabilityService.findById(responsabilityId);
     }
 
     return this.userRepository.create({
       id,
-      responsability: await this.responsabilityMapper.toDomain(responsability),
-      committee: await this.committeeMapper.toDomain(committee),
-      region: await this.regionMapper.toDomain(region),
-      association: await this.associationMapper.toDomain(association),
+      responsability: responsability
+        ? await this.responsabilityMapper.toDomain(responsability)
+        : undefined,
+      committee: committee
+        ? await this.committeeMapper.toDomain(committee)
+        : undefined,
+      region: region ? await this.regionMapper.toDomain(region) : undefined,
+      association: association
+        ? await this.associationMapper.toDomain(association)
+        : undefined,
       password: beforeUpdateEntityUser.password,
       photo: beforeUpdateEntityUser.photo,
       ...baseEntityUser,
@@ -99,41 +103,39 @@ export class UserMapper {
     regionId,
     ...baseEntityUser
   }: CreateUser): Promise<EntityUser> {
-    const responsability = await this.responsabilityService.findById(responsabilityId);
-    const region = await this.regionService.findById(regionId);
-    const association = await this.associationService.findById(associationId);
-    const committee = await this.committeeService.findById(committeeId);
-
-    if (!responsability) {
-      throw new BadRequestException(
-        "Responsability with id=" + responsabilityId + " does not exist"
-      );
+    let region: Region;
+    if (regionId) {
+      region = await this.regionService.findById(regionId);
     }
 
-    if (!region) {
-      throw new BadRequestException(
-        "Region with id=" + regionId + " does not exist"
-      );
+    let association: Association;
+    if (associationId) {
+      association = await this.associationService.findById(associationId);
     }
 
-    if (!association) {
-      throw new BadRequestException(
-        "Association with id=" + associationId + " does not exist"
-      );
+    let committee: Committee;
+    if (committeeId) {
+      committee = await this.committeeService.findById(committeeId);
     }
 
-    if (!committee) {
-      throw new BadRequestException(
-        "Committee with id=" + committeeId + " does not exist"
-      );
+    let responsability: Responsability;
+    if (responsabilityId) {
+      responsability =
+        await this.responsabilityService.findById(responsabilityId);
     }
 
     return this.userRepository.create({
       ...baseEntityUser,
-      responsability,
-      committee,
-      region,
-      association,
+      responsability: responsability
+        ? await this.responsabilityMapper.toDomain(responsability)
+        : undefined,
+      committee: committee
+        ? await this.committeeMapper.toDomain(committee)
+        : undefined,
+      region: region ? await this.regionMapper.toDomain(region) : undefined,
+      association: association
+        ? await this.associationMapper.toDomain(association)
+        : undefined,
     });
   }
 }

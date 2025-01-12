@@ -4,6 +4,7 @@ import {
   Get,
   NotFoundException,
   Param,
+  Post,
   Put,
   Query,
 } from "@nestjs/common";
@@ -16,6 +17,7 @@ import { Authenticated } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { UserMapper } from "./mapper";
 import {
+  CreateUser,
   ProfilePicture,
   UpdateUser,
   UploadeSuccessResponse,
@@ -28,7 +30,7 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly userMapper: UserMapper
-  ) {}
+  ) { }
 
   @Get("/users")
   @Authenticated()
@@ -105,6 +107,20 @@ export class UserController {
   async updateUser(@Body() updateUser: UpdateUser) {
     const mappedUser = await this.userMapper.updateToDomain(updateUser);
     const user = await this.userService.updateUserInfos(mappedUser);
+    return this.userMapper.toRest(user);
+  }
+
+  @Post("/users")
+  @ApiBody({
+    type: CreateUser
+  })
+  @ApiJfds({
+    operationId: "createUser",
+    type: User
+  })
+  async createUser(@Body() createUser: CreateUser) {
+    const mappedUser = await this.userMapper.createToDomain(createUser);
+    const user = await this.userService.createUser(mappedUser);
     return this.userMapper.toRest(user);
   }
 }
