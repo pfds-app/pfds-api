@@ -18,13 +18,14 @@ import { UploadeSuccessResponse } from "src/controller/rest";
 import { UserValidator } from "./validator/user.validator";
 import { findByCriteria } from "./utils/find-by-cireria";
 import { UPDATED_AT_CREATED_AT_ORDER_BY } from "./utils/default-order-by";
+import { UserGenderStat } from "./model";
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly repository: Repository<User>,
     private readonly userValidator: UserValidator
-  ) {}
+  ) { }
 
   async findAll(pagination: PaginationParams, criteria: Criteria<User>) {
     return findByCriteria<User>({
@@ -99,5 +100,20 @@ export class UserService {
   async updateUserInfos(user: User): Promise<User> {
     await this.userValidator.checkRequiredFieldsByRole(user);
     return this.repository.save(user);
+  }
+
+  async getGenderStatsByYear(fromDate: string, endDate: string): Promise<UserGenderStat[]> {
+    return this.repository
+      .createQueryBuilder('entity')
+      .select("EXTRACT(YEAR FROM entity.createdAt)", "year")
+      .addSelect("COUNT(CASE WHEN entity.gender = 'MALE' THEN 1 END)", "maleCount")
+      .addSelect("COUNT(CASE WHEN entity.gender = 'FEMALE' THEN 1 END)", "femaleCount")
+      .where("entity.createdAt BETWEEN :fromDate AND :endDate", {
+        fromDate,
+        endDate,
+      })
+      .groupBy("EXTRACT(YEAR FROM entity.createdAt)")
+      .orderBy("year", "ASC")
+      .getRawMany();
   }
 }
