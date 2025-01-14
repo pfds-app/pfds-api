@@ -547,9 +547,9 @@ paths:
       summary: ''
       tags:
         - Users
-  /users/genders/stats:
+  /users/members/stats:
     get:
-      operationId: getUserGenderStats
+      operationId: getUserMembersStats
       parameters:
         - name: fromDate
           required: false
@@ -563,6 +563,14 @@ paths:
           schema:
             format: date
             type: string
+        - name: type
+          required: false
+          in: query
+          schema:
+            enum:
+              - ACCULUMATED
+              - PER_YEAR
+            type: string
       responses:
         '200':
           description: ''
@@ -571,7 +579,7 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/UserGenderStat'
+                  $ref: '#/components/schemas/UserStat'
         '400':
           description: ''
           content:
@@ -3234,7 +3242,7 @@ components:
         - createdAt
         - updatedAt
         - password
-    UserGenderStat:
+    UserStat:
       type: object
       properties:
         year:
@@ -3243,10 +3251,13 @@ components:
           type: number
         femaleCount:
           type: number
+        totalCount:
+          type: number
       required:
         - year
         - maleCount
         - femaleCount
+        - totalCount
     Sacrament:
       type: object
       properties:

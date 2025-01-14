@@ -12,7 +12,7 @@ import { ApiBody, ApiConsumes, ApiTags } from "@nestjs/swagger";
 import { FormDataRequest } from "nestjs-form-data";
 
 import { ApiCriteria, ApiJfds, ApiPagination } from "src/docs/decorators";
-import { UserService } from "src/service";
+import { UserService, UserStatType } from "src/service";
 import { Authenticated } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { UserMapper } from "./mapper";
@@ -24,7 +24,7 @@ import {
   User,
 } from "./rest";
 import { Role } from "src/model";
-import { UserGenderStat } from "src/service/model";
+import { UserStat } from "src/service/model";
 
 @Controller()
 @ApiTags("Users")
@@ -32,7 +32,7 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly userMapper: UserMapper
-  ) {}
+  ) { }
 
   @Get("/users")
   @Authenticated()
@@ -125,19 +125,21 @@ export class UserController {
     return this.userMapper.toRest(user);
   }
 
-  @Get("/users/genders/stats")
+  @Get("/users/members/stats")
   @ApiCriteria(
+    { name: "type", type: "string", enum: UserStatType, required: true },
     { name: "fromDate", type: "string", format: "date" },
-    { name: "endDate", type: "string", format: "date" }
+    { name: "endDate", type: "string", format: "date" },
   )
   @ApiJfds({
-    operationId: "getUserGenderStats",
-    type: [UserGenderStat],
+    operationId: "getUserMembersStats",
+    type: [UserStat],
   })
-  async getUserGenderStats(
+  async getUserCreatedStatByYear(
     @Query("fromDate") fromDate: string,
-    @Query("endDate") endDate: string
+    @Query("endDate") endDate: string,
+    @Query("type") type: UserStatType
   ) {
-    return this.userService.getUserGenderStats(fromDate, endDate);
+    return this.userService.getUserMemberStats(fromDate, endDate, type);
   }
 }

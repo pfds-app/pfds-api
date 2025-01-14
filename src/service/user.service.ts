@@ -16,16 +16,34 @@ import { PaginationParams } from "src/controller/decorators";
 import { Criteria } from "./utils/criteria";
 import { UploadeSuccessResponse } from "src/controller/rest";
 import { UserValidator } from "./validator/user.validator";
+import { UserStat } from "./model";
 import { findByCriteria } from "./utils/find-by-cireria";
 import { UPDATED_AT_CREATED_AT_ORDER_BY } from "./utils/default-order-by";
-import { UserGenderStat } from "./model";
 
+export enum UserStatType {
+  ACCULUMATED = "ACCULUMATED",
+  PER_YEAR = "PER_YEAR"
+}
+
+type StringUserStat = {
+  maleCount: string;
+  femaleCount: string;
+  totalCount: string;
+  year: string
+}
+
+const mapStringUserStatToNumber = (stringUserStat: StringUserStat): UserStat => ({
+  year: +stringUserStat.year,
+  femaleCount: +stringUserStat.femaleCount,
+  totalCount: +stringUserStat.totalCount,
+  maleCount: +stringUserStat.maleCount
+});
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly repository: Repository<User>,
     private readonly userValidator: UserValidator
-  ) {}
+  ) { }
 
   async findAll(pagination: PaginationParams, criteria: Criteria<User>) {
     return findByCriteria<User>({
@@ -102,11 +120,11 @@ export class UserService {
     return this.repository.save(user);
   }
 
-  async getUserGenderStats(
+  async getUserCreatedStatByYear(
     fromDate: string,
     endDate: string
-  ): Promise<UserGenderStat[]> {
-    const rawData: UserGenderStat[] = await this.repository
+  ): Promise<UserStat[]> {
+    const rawData: UserStat[] = await this.repository
       .createQueryBuilder("entity")
       .select("EXTRACT(YEAR FROM entity.createdAt)", "year")
       .addSelect(
@@ -116,6 +134,10 @@ export class UserService {
       .addSelect(
         "COUNT(CASE WHEN entity.gender = 'FEMALE' THEN 1 END)",
         "femaleCount"
+      )
+      .addSelect(
+        "COUNT(*)",
+        "totalCount"
       )
       .where("entity.createdAt BETWEEN :fromDate AND :endDate", {
         fromDate,
@@ -133,6 +155,7 @@ export class UserService {
         year: fromYear,
         maleCount: 0,
         femaleCount: 0,
+        totalCount: 0,
       });
     }
 
@@ -141,9 +164,61 @@ export class UserService {
         year: endYear,
         maleCount: 0,
         femaleCount: 0,
+        totalCount: 0,
       });
     }
 
     return rawData;
+  }
+
+  async getUserMemberStatByYear(
+    fromDate: string,
+    endDate: string
+  ): Promise<UserStat[]> {
+    const rawData: { maleCount: string, femaleCount: string, totalCount: string, year: string }[] = await this.repository
+      .createQueryBuilder("entity")
+      .select("EXTRACT(YEAR FROM entity.createdAt)", "year")
+      .addSelect(
+        "COUNT(CASE WHEN entity.gender = 'MALE' THEN 1 END)",
+        "maleCount"
+      )
+      .addSelect(
+        "COUNT(CASE WHEN entity.gender = 'FEMALE' THEN 1 END)",
+        "femaleCount"
+      )
+      .addSelect(
+        "COUNT(*)",
+        "totalCount"
+      )
+      .where("entity.createdAt <= :endDate", { endDate })
+      .groupBy("EXTRACT(YEAR FROM entity.createdAt)")
+      .orderBy("year", "ASC")
+      .getRawMany();
+
+    const fromYear = new Date(fromDate).getFullYear();
+    const indexOfCreatedUserAfterFromYear = rawData.findIndex(stat => +stat.year > fromYear);
+
+    const results: UserStat[] = rawData.map((stat, index) => {
+      const mappedStat = mapStringUserStatToNumber(stat);
+      if (index === 0) {
+        return mappedStat;
+      }
+
+      const prevStat = rawData[index - 1];
+      mappedStat.totalCount += +prevStat.totalCount;
+      mappedStat.femaleCount += +prevStat.femaleCount;
+      mappedStat.maleCount += +prevStat.maleCount;
+      return mappedStat;
+    });
+    return indexOfCreatedUserAfterFromYear !== -1 ? results.slice(indexOfCreatedUserAfterFromYear, rawData.length) : results;
+  }
+
+  async getUserMemberStats(fromDate: string, endDate: string, type: UserStatType) {
+    switch (type) {
+      case UserStatType.PER_YEAR:
+        return this.getUserCreatedStatByYear(fromDate, endDate);
+      default:
+        return this.getUserMemberStatByYear(fromDate, endDate);
+    }
   }
 }
