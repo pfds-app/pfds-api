@@ -3726,6 +3726,14 @@ components:
           enum:
             - ALL
             - MANAGER
+        organisatorRole:
+          type: string
+          enum:
+            - ADMIN
+            - REGION_MANAGER
+            - COMMITTEE_MANAGER
+            - ASSOCIATION_MANAGER
+            - SIMPLE_USER
         createdAt:
           type: string
           format: date-time
@@ -3740,5 +3748,6 @@ components:
         - endDate
         - description
         - roleType
+        - organisatorRole
         - createdAt
         - updatedAt

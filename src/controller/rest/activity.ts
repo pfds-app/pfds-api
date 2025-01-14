@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsDateString, IsEnum, IsString, IsUUID } from "class-validator";
-import { ActivityRoleType } from "src/model";
+import { ActivityRoleType, Role } from "src/model";
 
 export class Activity {
   @IsUUID()
@@ -28,6 +28,10 @@ export class Activity {
   @IsEnum(ActivityRoleType)
   @ApiProperty({ enum: ActivityRoleType })
   roleType: ActivityRoleType;
+
+  @IsEnum(Role)
+  @ApiProperty({ enum: Role })
+  organisatorRole: Role;
 
   @IsDateString()
   @ApiProperty({ format: "date-time" })

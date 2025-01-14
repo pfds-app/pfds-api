@@ -6,6 +6,7 @@ import {
   UpdateDateColumn,
 } from "typeorm";
 import { ActivityRoleType } from "./activity-role-type.enum";
+import { Role } from "./role.enum";
 
 @Entity()
 export class Activity {
@@ -29,6 +30,9 @@ export class Activity {
 
   @Column({ type: "enum", enum: ActivityRoleType })
   roleType: ActivityRoleType;
+
+  @Column({ type: "enum", enum: Role, name: "role_organisator" })
+  organisatorRole: Role;
 
   @CreateDateColumn({
     name: "created_at",
