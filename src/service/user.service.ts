@@ -25,7 +25,7 @@ export class UserService {
   constructor(
     @InjectRepository(User) private readonly repository: Repository<User>,
     private readonly userValidator: UserValidator
-  ) { }
+  ) {}
 
   async findAll(pagination: PaginationParams, criteria: Criteria<User>) {
     return findByCriteria<User>({
@@ -102,12 +102,21 @@ export class UserService {
     return this.repository.save(user);
   }
 
-  async getGenderStatsByYear(fromDate: string, endDate: string): Promise<UserGenderStat[]> {
-    return this.repository
-      .createQueryBuilder('entity')
+  async getUserGenderStats(
+    fromDate: string,
+    endDate: string
+  ): Promise<UserGenderStat[]> {
+    const rawData: UserGenderStat[] = await this.repository
+      .createQueryBuilder("entity")
       .select("EXTRACT(YEAR FROM entity.createdAt)", "year")
-      .addSelect("COUNT(CASE WHEN entity.gender = 'MALE' THEN 1 END)", "maleCount")
-      .addSelect("COUNT(CASE WHEN entity.gender = 'FEMALE' THEN 1 END)", "femaleCount")
+      .addSelect(
+        "COUNT(CASE WHEN entity.gender = 'MALE' THEN 1 END)",
+        "maleCount"
+      )
+      .addSelect(
+        "COUNT(CASE WHEN entity.gender = 'FEMALE' THEN 1 END)",
+        "femaleCount"
+      )
       .where("entity.createdAt BETWEEN :fromDate AND :endDate", {
         fromDate,
         endDate,
@@ -115,5 +124,26 @@ export class UserService {
       .groupBy("EXTRACT(YEAR FROM entity.createdAt)")
       .orderBy("year", "ASC")
       .getRawMany();
+
+    const fromYear = new Date(fromDate).getFullYear();
+    const endYear = new Date(endDate).getFullYear();
+
+    if (!rawData.find((stat) => stat.year == fromYear)) {
+      rawData.unshift({
+        year: fromYear,
+        maleCount: 0,
+        femaleCount: 0,
+      });
+    }
+
+    if (!rawData.find((stat) => stat.year == endYear)) {
+      rawData.push({
+        year: endYear,
+        maleCount: 0,
+        femaleCount: 0,
+      });
+    }
+
+    return rawData;
   }
 }

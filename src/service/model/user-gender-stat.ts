@@ -2,7 +2,7 @@ import { ApiProperty } from "@nestjs/swagger";
 
 export class UserGenderStat {
   @ApiProperty()
-  year: number
+  year: number;
 
   @ApiProperty()
   maleCount: number;

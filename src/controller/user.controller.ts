@@ -24,6 +24,7 @@ import {
   User,
 } from "./rest";
 import { Role } from "src/model";
+import { UserGenderStat } from "src/service/model";
 
 @Controller()
 @ApiTags("Users")
@@ -31,16 +32,16 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly userMapper: UserMapper
-  ) { }
+  ) {}
 
   @Get("/users")
   @Authenticated()
   @ApiPagination()
-  @ApiCriteria(
-    {
-      name: "role", type: "string", enum: Role
-    }
-  )
+  @ApiCriteria({
+    name: "role",
+    type: "string",
+    enum: Role,
+  })
   @ApiJfds({
     operationId: "getUsers",
     type: [User],
@@ -50,7 +51,7 @@ export class UserController {
     @Query("role") role?: Role
   ) {
     const users = await this.userService.findAll(pagination, {
-      role
+      role,
     });
     return Promise.all(users.map((user) => this.userMapper.toRest(user)));
   }
@@ -112,15 +113,31 @@ export class UserController {
 
   @Post("/users")
   @ApiBody({
-    type: CreateUser
+    type: CreateUser,
   })
   @ApiJfds({
     operationId: "createUser",
-    type: User
+    type: User,
   })
   async createUser(@Body() createUser: CreateUser) {
     const mappedUser = await this.userMapper.createToDomain(createUser);
     const user = await this.userService.createUser(mappedUser);
     return this.userMapper.toRest(user);
+  }
+
+  @Get("/users/genders/stats")
+  @ApiCriteria(
+    { name: "fromDate", type: "string", format: "date" },
+    { name: "endDate", type: "string", format: "date" }
+  )
+  @ApiJfds({
+    operationId: "getUserGenderStats",
+    type: [UserGenderStat],
+  })
+  async getUserGenderStats(
+    @Query("fromDate") fromDate: string,
+    @Query("endDate") endDate: string
+  ) {
+    return this.userService.getUserGenderStats(fromDate, endDate);
   }
 }

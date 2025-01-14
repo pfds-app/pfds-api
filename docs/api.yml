@@ -547,6 +547,58 @@ paths:
       summary: ''
       tags:
         - Users
+  /users/genders/stats:
+    get:
+      operationId: getUserGenderStats
+      parameters:
+        - name: fromDate
+          required: false
+          in: query
+          schema:
+            format: date
+            type: string
+        - name: endDate
+          required: false
+          in: query
+          schema:
+            format: date
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/UserGenderStat'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+      summary: ''
+      tags:
+        - Users
   /associations:
     get:
       operationId: getAssociations
@@ -3182,6 +3234,19 @@ components:
         - createdAt
         - updatedAt
         - password
+    UserGenderStat:
+      type: object
+      properties:
+        year:
+          type: number
+        maleCount:
+          type: number
+        femaleCount:
+          type: number
+      required:
+        - year
+        - maleCount
+        - femaleCount
     Sacrament:
       type: object
       properties:
