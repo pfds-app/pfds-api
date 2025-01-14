@@ -10,3 +10,4 @@ export * from "./ledger.controller";
 export * from "./operation.controller";
 export * from "./ticket.controller";
 export * from "./payed-ticket.controller";
+export * from "./activity.controller";

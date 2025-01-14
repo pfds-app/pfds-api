@@ -32,7 +32,7 @@ export class UserController {
   constructor(
     private readonly userService: UserService,
     private readonly userMapper: UserMapper
-  ) { }
+  ) {}
 
   @Get("/users")
   @Authenticated()
@@ -129,7 +129,7 @@ export class UserController {
   @ApiCriteria(
     { name: "type", type: "string", enum: UserStatType, required: true },
     { name: "fromDate", type: "string", format: "date" },
-    { name: "endDate", type: "string", format: "date" },
+    { name: "endDate", type: "string", format: "date" }
   )
   @ApiJfds({
     operationId: "getUserMembersStats",

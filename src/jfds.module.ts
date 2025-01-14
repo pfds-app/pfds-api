@@ -19,6 +19,7 @@ import {
   OperationModule,
   TicketModule,
   PayedTicketModule,
+  ActivityModule,
 } from "./module";
 
 @Module({
@@ -45,6 +46,7 @@ import {
     OperationModule,
     TicketModule,
     PayedTicketModule,
+    ActivityModule,
   ],
 })
 export class JfdsModule {}

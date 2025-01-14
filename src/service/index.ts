@@ -10,3 +10,4 @@ export * from "./ledger.service";
 export * from "./operation.service";
 export * from "./ticket.service";
 export * from "./payed-ticket.service";
+export * from "./activity.service";

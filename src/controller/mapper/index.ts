@@ -11,3 +11,4 @@ export * from "./ticket.mapper";
 export * from "./payed-ticket.mapper";
 export * from "./ticket-status.mapper";
 export * from "./operation-result.mapper";
+export * from "./activity.mapper";

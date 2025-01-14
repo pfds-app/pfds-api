@@ -22,28 +22,30 @@ import { UPDATED_AT_CREATED_AT_ORDER_BY } from "./utils/default-order-by";
 
 export enum UserStatType {
   ACCULUMATED = "ACCULUMATED",
-  PER_YEAR = "PER_YEAR"
+  PER_YEAR = "PER_YEAR",
 }
 
 type StringUserStat = {
   maleCount: string;
   femaleCount: string;
   totalCount: string;
-  year: string
-}
+  year: string;
+};
 
-const mapStringUserStatToNumber = (stringUserStat: StringUserStat): UserStat => ({
+const mapStringUserStatToNumber = (
+  stringUserStat: StringUserStat
+): UserStat => ({
   year: +stringUserStat.year,
   femaleCount: +stringUserStat.femaleCount,
   totalCount: +stringUserStat.totalCount,
-  maleCount: +stringUserStat.maleCount
+  maleCount: +stringUserStat.maleCount,
 });
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly repository: Repository<User>,
     private readonly userValidator: UserValidator
-  ) { }
+  ) {}
 
   async findAll(pagination: PaginationParams, criteria: Criteria<User>) {
     return findByCriteria<User>({
@@ -135,10 +137,7 @@ export class UserService {
         "COUNT(CASE WHEN entity.gender = 'FEMALE' THEN 1 END)",
         "femaleCount"
       )
-      .addSelect(
-        "COUNT(*)",
-        "totalCount"
-      )
+      .addSelect("COUNT(*)", "totalCount")
       .where("entity.createdAt BETWEEN :fromDate AND :endDate", {
         fromDate,
         endDate,
@@ -175,7 +174,12 @@ export class UserService {
     fromDate: string,
     endDate: string
   ): Promise<UserStat[]> {
-    const rawData: { maleCount: string, femaleCount: string, totalCount: string, year: string }[] = await this.repository
+    const rawData: {
+      maleCount: string;
+      femaleCount: string;
+      totalCount: string;
+      year: string;
+    }[] = await this.repository
       .createQueryBuilder("entity")
       .select("EXTRACT(YEAR FROM entity.createdAt)", "year")
       .addSelect(
@@ -186,17 +190,16 @@ export class UserService {
         "COUNT(CASE WHEN entity.gender = 'FEMALE' THEN 1 END)",
         "femaleCount"
       )
-      .addSelect(
-        "COUNT(*)",
-        "totalCount"
-      )
+      .addSelect("COUNT(*)", "totalCount")
       .where("entity.createdAt <= :endDate", { endDate })
       .groupBy("EXTRACT(YEAR FROM entity.createdAt)")
       .orderBy("year", "ASC")
       .getRawMany();
 
     const fromYear = new Date(fromDate).getFullYear();
-    const indexOfCreatedUserAfterFromYear = rawData.findIndex(stat => +stat.year > fromYear);
+    const indexOfCreatedUserAfterFromYear = rawData.findIndex(
+      (stat) => +stat.year > fromYear
+    );
 
     const results: UserStat[] = rawData.map((stat, index) => {
       const mappedStat = mapStringUserStatToNumber(stat);
@@ -210,10 +213,16 @@ export class UserService {
       mappedStat.maleCount += +prevStat.maleCount;
       return mappedStat;
     });
-    return indexOfCreatedUserAfterFromYear !== -1 ? results.slice(indexOfCreatedUserAfterFromYear, rawData.length) : results;
+    return indexOfCreatedUserAfterFromYear !== -1
+      ? results.slice(indexOfCreatedUserAfterFromYear, rawData.length)
+      : results;
   }
 
-  async getUserMemberStats(fromDate: string, endDate: string, type: UserStatType) {
+  async getUserMemberStats(
+    fromDate: string,
+    endDate: string,
+    type: UserStatType
+  ) {
     switch (type) {
       case UserStatType.PER_YEAR:
         return this.getUserCreatedStatByYear(fromDate, endDate);
