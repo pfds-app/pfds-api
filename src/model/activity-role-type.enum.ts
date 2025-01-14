@@ -1,4 +1,4 @@
 export enum ActivityRoleType {
-  ALL,
-  MANAGER,
+  ALL = "ALL",
+  MANAGER = "MANAGER",
 }

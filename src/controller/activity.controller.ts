@@ -16,6 +16,7 @@ import { Authenticated } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { Activity } from "./rest";
 import { ActivityMapper } from "./mapper";
+import { MoreThanOrEqual } from "typeorm";
 
 @Controller()
 @ApiTags("Resources")
@@ -28,17 +29,22 @@ export class ActivityController {
   @Get("/activities")
   @ApiPagination()
   @Authenticated()
-  @ApiCriteria({ name: "name", type: "string" })
+  @ApiCriteria(
+    { name: "name", type: "string" },
+    { name: "afterDate", type: "string", format: "date" }
+  )
   @ApiJfds({
     operationId: "getActivities",
     type: [Activity],
   })
   async findAll(
     @Pagination() pagination: PaginationParams,
-    @Query("name") name?: string
+    @Query("name") name?: string,
+    @Query("afterDate") afterDate?: string
   ) {
     const activities = await this.activityService.findAll(pagination, {
       name,
+      beginDate: afterDate ? MoreThanOrEqual(afterDate) : undefined,
     });
     return Promise.all(
       activities.map((role) => this.activityMapper.toRest(role))
