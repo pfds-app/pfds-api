@@ -9,7 +9,6 @@ import {
   Query,
 } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
-
 import { ApiCriteria, ApiJfds, ApiPagination } from "src/docs/decorators";
 import { ActivityService } from "src/service";
 import { Authenticated } from "src/auth/decorators";
@@ -17,6 +16,7 @@ import { Pagination, PaginationParams } from "./decorators";
 import { Activity } from "./rest";
 import { ActivityMapper } from "./mapper";
 import { MoreThanOrEqual } from "typeorm";
+import { Role } from "src/model";
 
 @Controller()
 @ApiTags("Resources")
@@ -66,7 +66,7 @@ export class ActivityController {
   }
 
   @Put("/activities")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiBody({ type: [Activity] })
   @ApiJfds({
     operationId: "crupdateActivities",
@@ -83,7 +83,7 @@ export class ActivityController {
   }
 
   @Delete("/activities/:id")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiJfds({
     operationId: "deleteActivityById",
     type: Activity,

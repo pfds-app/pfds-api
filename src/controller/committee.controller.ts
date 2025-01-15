@@ -16,6 +16,7 @@ import { Authenticated } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { Committee } from "./rest";
 import { CommitteeMapper } from "./mapper";
+import { Role } from "src/model";
 
 @Controller()
 @ApiTags("Resources")
@@ -60,7 +61,7 @@ export class CommitteeController {
   }
 
   @Put("/committees")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiBody({ type: [Committee] })
   @ApiJfds({
     operationId: "crupdateCommittees",
@@ -77,7 +78,7 @@ export class CommitteeController {
   }
 
   @Delete("/committees/:id")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiJfds({
     operationId: "deleteCommitteeById",
     type: Committee,

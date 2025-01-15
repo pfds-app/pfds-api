@@ -21,6 +21,7 @@ import {
   UserMapper,
 } from "./mapper";
 import { User, TicketStatus } from "./rest";
+import { Role } from "src/model";
 
 @Controller()
 @ApiTags("Moneys")
@@ -110,7 +111,7 @@ export class TicketController {
   }
 
   @Put("/tickets")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiBody({ type: [CrupdateTicket] })
   @ApiJfds({
     operationId: "crupdateTickets",
@@ -127,7 +128,7 @@ export class TicketController {
   }
 
   @Delete("/tickets/:id")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiJfds({
     operationId: "deleteTicketById",
     type: Ticket,

@@ -16,6 +16,7 @@ import { Authenticated } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { Ledger } from "./rest";
 import { LedgerMapper } from "./mapper";
+import { Role } from "src/model";
 
 @Controller()
 @ApiTags("Moneys")
@@ -58,7 +59,7 @@ export class LedgerController {
   }
 
   @Put("/ledgers")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiBody({ type: [Ledger] })
   @ApiJfds({
     operationId: "crupdateLedgers",
@@ -75,7 +76,7 @@ export class LedgerController {
   }
 
   @Delete("/ledgers/:id")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiJfds({
     operationId: "deleteLedgerById",
     type: Ledger,

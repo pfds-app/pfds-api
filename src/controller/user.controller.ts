@@ -71,6 +71,7 @@ export class UserController {
   }
 
   @Put("/users/:id/picture/raw")
+  @Authenticated()
   @FormDataRequest()
   @ApiConsumes("multipart/form-data")
   @ApiBody({
@@ -112,6 +113,7 @@ export class UserController {
   }
 
   @Post("/users")
+  @Authenticated()
   @ApiBody({
     type: CreateUser,
   })

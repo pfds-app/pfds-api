@@ -17,6 +17,7 @@ import { Pagination, PaginationParams } from "./decorators";
 import { Event } from "./rest";
 import { EventMapper } from "./mapper";
 import { MoreThanOrEqual } from "typeorm";
+import { Role } from "src/model";
 
 @Controller()
 @ApiTags("Resources")
@@ -64,7 +65,7 @@ export class EventController {
   }
 
   @Put("/events")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiBody({ type: [Event] })
   @ApiJfds({
     operationId: "crupdateEvents",
@@ -81,7 +82,7 @@ export class EventController {
   }
 
   @Delete("/events/:id")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiJfds({
     operationId: "deleteEventById",
     type: Event,

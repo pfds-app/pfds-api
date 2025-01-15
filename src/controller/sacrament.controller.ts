@@ -16,6 +16,7 @@ import { Authenticated } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { Sacrament } from "./rest";
 import { SacramentMapper } from "./mapper";
+import { Role } from "src/model";
 
 @Controller()
 @ApiTags("Resources")
@@ -60,7 +61,7 @@ export class SacramentController {
   }
 
   @Put("/sacraments")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiBody({ type: [Sacrament] })
   @ApiJfds({
     operationId: "crupdateSacraments",
@@ -77,7 +78,7 @@ export class SacramentController {
   }
 
   @Delete("/sacraments/:id")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiJfds({
     operationId: "deleteSacramentById",
     type: Sacrament,

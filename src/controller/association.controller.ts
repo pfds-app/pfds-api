@@ -16,6 +16,7 @@ import { Authenticated } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { Association } from "./rest";
 import { AssociationMapper } from "./mapper";
+import { Role } from "src/model";
 
 @Controller()
 @ApiTags("Resources")
@@ -60,7 +61,7 @@ export class AssociationController {
   }
 
   @Put("/associations")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiBody({ type: [Association] })
   @ApiJfds({
     operationId: "crupdateAssociations",
@@ -82,7 +83,7 @@ export class AssociationController {
   }
 
   @Delete("/associations/:id")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiJfds({
     operationId: "deleteAssociationById",
     type: Association,

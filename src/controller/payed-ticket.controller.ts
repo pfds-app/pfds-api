@@ -7,6 +7,7 @@ import { Authenticated } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { PayedTicket } from "./rest";
 import { PayedTicketMapper } from "./mapper";
+import { Role } from "src/model";
 
 @Controller()
 @ApiTags("Moneys")
@@ -68,7 +69,7 @@ export class PayedTicketController {
   }
 
   @Put("/operation/:operationId/staffs/:staffId/payed-tickets")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiBody({ type: [PayedTicket] })
   @ApiJfds({
     operationId: "crupdatePayedTickets",

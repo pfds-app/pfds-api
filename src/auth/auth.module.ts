@@ -7,7 +7,7 @@ import { ConfigService } from "@nestjs/config";
 import { AuthService } from "./auth.service";
 import { AuthController } from "./auth.controller";
 import { JwtStrategy } from "./startegy";
-import { JwtAuthGuard } from "./guards";
+import { JwtAuthGuard, RoleGuard } from "./guards";
 import {
   Association,
   Committee,
@@ -69,6 +69,7 @@ import { UserValidator } from "src/service/validator/user.validator";
     RegionMapper,
     AssociationService,
     AssociationMapper,
+    RoleGuard,
   ],
   controllers: [AuthController],
 })

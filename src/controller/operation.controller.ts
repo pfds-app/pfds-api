@@ -16,6 +16,7 @@ import { Authenticated } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { Operation } from "./rest";
 import { OperationMapper } from "./mapper";
+import { Role } from "src/model";
 
 @Controller()
 @ApiTags("Moneys")
@@ -60,7 +61,7 @@ export class OperationController {
   }
 
   @Put("/operations")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiBody({ type: [Operation] })
   @ApiJfds({
     operationId: "crupdateOperations",
@@ -77,7 +78,7 @@ export class OperationController {
   }
 
   @Delete("/operations/:id")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiJfds({
     operationId: "deleteOperationById",
     type: Operation,

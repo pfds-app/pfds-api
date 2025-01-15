@@ -16,6 +16,7 @@ import { Authenticated } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { Responsability } from "./rest";
 import { ResponsabilityMapper } from "./mapper";
+import { Role } from "src/model";
 
 @Controller()
 @ApiTags("Resources")
@@ -61,7 +62,7 @@ export class ResponsabilityController {
   }
 
   @Put("/responsabilities")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiBody({ type: [Responsability] })
   @ApiJfds({
     operationId: "crupdateResponsabilities",
@@ -79,7 +80,7 @@ export class ResponsabilityController {
   }
 
   @Delete("/responsabilities/:id")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiJfds({
     operationId: "deleteResponsabilityById",
     type: Responsability,

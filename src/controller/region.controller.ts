@@ -16,6 +16,7 @@ import { Authenticated } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { Region } from "./rest";
 import { RegionMapper } from "./mapper";
+import { Role } from "src/model";
 
 @Controller()
 @ApiTags("Resources")
@@ -58,7 +59,7 @@ export class RegionController {
   }
 
   @Put("/regions")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiBody({ type: [Region] })
   @ApiJfds({
     operationId: "crupdateRegions",
@@ -75,7 +76,7 @@ export class RegionController {
   }
 
   @Delete("/regions/:id")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiJfds({
     operationId: "deleteRegionById",
     type: Region,
