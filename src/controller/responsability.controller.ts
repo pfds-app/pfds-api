@@ -28,7 +28,6 @@ export class ResponsabilityController {
 
   @Get("/responsabilities")
   @ApiPagination()
-  @Authenticated()
   @ApiCriteria({ name: "name", type: "string" })
   @ApiJfds({
     operationId: "getResponsabilities",
@@ -48,7 +47,6 @@ export class ResponsabilityController {
   }
 
   @Get("/responsabilities/:id")
-  @Authenticated()
   @ApiJfds({
     operationId: "getResponsabilityById",
     type: Responsability,

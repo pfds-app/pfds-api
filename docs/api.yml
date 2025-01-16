@@ -167,6 +167,50 @@ paths:
       summary: ''
       tags:
         - Security
+  /signin-by-role:
+    post:
+      operationId: signinByRole
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SigninByRole'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Whoami'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+      summary: ''
+      tags:
+        - Security
   /signin:
     post:
       operationId: signin
@@ -401,6 +445,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponseError'
+      security:
+        - bearer: []
       summary: ''
       tags:
         - Users
@@ -500,6 +546,8 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponseError'
+      security:
+        - bearer: []
       summary: ''
       tags:
         - Users
@@ -3157,6 +3205,28 @@ components:
         - createdAt
         - updatedAt
         - token
+    SigninByRole:
+      type: object
+      properties:
+        firstName:
+          type: string
+        lastName:
+          type: string
+        responsabilityId:
+          type: string
+        committeeId:
+          type: string
+        associationId:
+          type: string
+        regionId:
+          type: string
+      required:
+        - firstName
+        - lastName
+        - responsabilityId
+        - committeeId
+        - associationId
+        - regionId
     SigninPayload:
       type: object
       properties:

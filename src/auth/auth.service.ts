@@ -1,11 +1,21 @@
 import * as bcrypt from "bcrypt";
-import { ForbiddenException, Injectable } from "@nestjs/common";
+import {
+  BadRequestException,
+  ForbiddenException,
+  Injectable,
+} from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 
 import { User } from "src/model";
 import { UserService } from "src/service";
 import { UserMapper } from "src/controller/mapper";
-import { Whoami, JwtPayload, SigninPayload, SignupPayload } from "./model";
+import {
+  Whoami,
+  JwtPayload,
+  SigninPayload,
+  SignupPayload,
+  SigninByRole,
+} from "./model";
 
 @Injectable()
 export class AuthService {
@@ -68,5 +78,38 @@ export class AuthService {
   async allowAdminSignup() {
     const users = await this.userService.findAll({ page: 1, pageSize: 1 }, {});
     return !(users.length > 0);
+  }
+
+  async signinByRole(payload: SigninByRole) {
+    if (!payload.lastName || !payload.firstName || !payload.responsabilityId) {
+      throw new ForbiddenException("Invalid Credentials");
+    }
+
+    const users = await this.userService.findAll(
+      { page: 1, pageSize: 1 },
+      {
+        firstName: payload.firstName,
+        lastName: payload.lastName,
+        region: {
+          id: payload.regionId,
+        },
+        association: {
+          id: payload.associationId,
+        },
+        committee: {
+          id: payload.committeeId,
+        },
+        responsability: {
+          id: payload.responsabilityId,
+        },
+      }
+    );
+
+    if (users.length > 1) {
+      throw new BadRequestException("Many users have the same credentials");
+    }
+
+    const [user] = users;
+    return this.domainUserToWhoami(user);
   }
 }
