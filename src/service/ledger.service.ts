@@ -37,7 +37,7 @@ export class LedgerService {
     if (!toDelete) {
       throw new BadRequestException("No Ledger with id = " + id + " was found");
     }
-    await this.repository.delete({ id });
+    await this.repository.softDelete({ id });
     return toDelete;
   }
 }

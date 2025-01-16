@@ -495,6 +495,50 @@ paths:
       summary: ''
       tags:
         - Users
+    delete:
+      operationId: deleteUserById
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+      security:
+        - bearer: []
+      summary: ''
+      tags:
+        - Users
   /users/{id}/picture/raw:
     put:
       operationId: updateProfilePicture
@@ -712,8 +756,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponseError'
-      security:
-        - bearer: []
       summary: ''
       tags:
         - Resources
@@ -806,8 +848,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponseError'
-      security:
-        - bearer: []
       summary: ''
       tags:
         - Resources
@@ -912,8 +952,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponseError'
-      security:
-        - bearer: []
       summary: ''
       tags:
         - Resources
@@ -1006,8 +1044,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponseError'
-      security:
-        - bearer: []
       summary: ''
       tags:
         - Resources
@@ -1112,8 +1148,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponseError'
-      security:
-        - bearer: []
       summary: ''
       tags:
         - Resources
@@ -1206,8 +1240,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponseError'
-      security:
-        - bearer: []
       summary: ''
       tags:
         - Resources
@@ -1312,8 +1344,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponseError'
-      security:
-        - bearer: []
       summary: ''
       tags:
         - Resources
@@ -1406,8 +1436,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponseError'
-      security:
-        - bearer: []
       summary: ''
       tags:
         - Resources
@@ -3208,6 +3236,8 @@ components:
     SigninByRole:
       type: object
       properties:
+        role:
+          type: string
         firstName:
           type: string
         lastName:
@@ -3221,6 +3251,7 @@ components:
         regionId:
           type: string
       required:
+        - role
         - firstName
         - lastName
         - responsabilityId

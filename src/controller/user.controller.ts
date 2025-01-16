@@ -1,6 +1,7 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   NotFoundException,
   Param,
@@ -143,5 +144,16 @@ export class UserController {
     @Query("type") type: UserStatType
   ) {
     return this.userService.getUserMemberStats(fromDate, endDate, type);
+  }
+
+  @Delete("/users/:id")
+  @Authenticated({ roles: [Role.ADMIN] })
+  @ApiJfds({
+    operationId: "deleteUserById",
+    type: User,
+  })
+  async deleteUserById(@Param("id") id: string) {
+    const deletedUser = await this.userService.deleteById(id);
+    return this.userMapper.toRest(deletedUser);
   }
 }

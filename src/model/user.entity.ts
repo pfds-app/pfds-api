@@ -3,6 +3,7 @@ import {
   BeforeInsert,
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   PrimaryColumn,
@@ -108,4 +109,7 @@ export class User {
     const salt = await bcrypt.genSalt();
     this.password = await bcrypt.hash(this.password, salt);
   }
+
+  @DeleteDateColumn({ name: "deleted_at" })
+  deletedAt?: Date;
 }

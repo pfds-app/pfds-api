@@ -230,4 +230,13 @@ export class UserService {
         return this.getUserMemberStatByYear(fromDate, endDate);
     }
   }
+
+  async deleteById(id: string) {
+    const toDelete = await this.findById(id);
+    if (!toDelete) {
+      throw new BadRequestException("No Ticket with id = " + id + " was found");
+    }
+    await this.repository.softDelete({ id });
+    return toDelete;
+  }
 }

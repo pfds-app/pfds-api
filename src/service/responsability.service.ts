@@ -42,7 +42,7 @@ export class ResponsabilityService {
         "No Responsability with id = " + id + " was found"
       );
     }
-    await this.repository.delete({ id });
+    await this.repository.softDelete({ id });
     return toDelete;
   }
 }

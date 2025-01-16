@@ -1,6 +1,7 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   ManyToOne,
   PrimaryColumn,
@@ -44,4 +45,7 @@ export class Ticket {
     onUpdate: "CURRENT_TIMESTAMP",
   })
   updatedAt: string;
+
+  @DeleteDateColumn({ name: "deleted_at" })
+  deletedAt?: Date;
 }

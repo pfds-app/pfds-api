@@ -6,7 +6,7 @@ import {
 } from "@nestjs/common";
 import { JwtService } from "@nestjs/jwt";
 
-import { User } from "src/model";
+import { Role, User } from "src/model";
 import { UserService } from "src/service";
 import { UserMapper } from "src/controller/mapper";
 import {
@@ -80,11 +80,16 @@ export class AuthService {
     return !(users.length > 0);
   }
 
-  async signinByRole(payload: SigninByRole) {
-    if (!payload.lastName || !payload.firstName || !payload.responsabilityId) {
+  async signinByRole(signinByRole: SigninByRole) {
+    if (
+      !signinByRole.lastName ||
+      !signinByRole.firstName ||
+      !signinByRole.responsabilityId
+    ) {
       throw new ForbiddenException("Invalid Credentials");
     }
 
+    const payload = await this.getUserPayloadByRole(signinByRole);
     const users = await this.userService.findAll(
       { page: 1, pageSize: 1 },
       {
@@ -111,5 +116,46 @@ export class AuthService {
 
     const [user] = users;
     return this.domainUserToWhoami(user);
+  }
+
+  async getUserPayloadByRole({
+    role,
+    firstName,
+    lastName,
+    regionId,
+    committeeId,
+    associationId,
+    responsabilityId,
+  }: SigninByRole): Promise<SigninByRole> {
+    const baseSignin: SigninByRole = {
+      role,
+      firstName,
+      lastName,
+      responsabilityId,
+    };
+
+    switch (role) {
+      case Role.ADMIN:
+        return baseSignin;
+      case Role.SIMPLE_USER:
+        return baseSignin;
+      case Role.REGION_MANAGER:
+        if (!regionId) {
+          throw new ForbiddenException("Invalid Credentials");
+        }
+        return { ...baseSignin, regionId };
+      case Role.COMMITTEE_MANAGER:
+        if (!committeeId) {
+          throw new ForbiddenException("Invalid Credentials");
+        }
+        return { ...baseSignin, committeeId };
+      case Role.ASSOCIATION_MANAGER:
+        if (!associationId) {
+          throw new ForbiddenException("Invalid Credentials");
+        }
+        return { ...baseSignin, associationId };
+      default:
+        break;
+    }
   }
 }

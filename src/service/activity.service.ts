@@ -43,7 +43,7 @@ export class ActivityService {
         "No Activity with id = " + id + " was found"
       );
     }
-    await this.repository.delete({ id });
+    await this.repository.softDelete({ id });
     return toDelete;
   }
 }

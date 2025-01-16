@@ -1,6 +1,7 @@
 import {
   Column,
   CreateDateColumn,
+  DeleteDateColumn,
   Entity,
   PrimaryColumn,
   UpdateDateColumn,
@@ -42,4 +43,7 @@ export class Ledger {
     onUpdate: "CURRENT_TIMESTAMP",
   })
   updatedAt: string;
+
+  @DeleteDateColumn({ name: "deleted_at" })
+  deletedAt?: Date;
 }

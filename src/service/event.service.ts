@@ -41,7 +41,7 @@ export class EventService {
     if (!toDelete) {
       throw new BadRequestException("No Event with id = " + id + " was found");
     }
-    await this.repository.delete({ id });
+    await this.repository.softDelete({ id });
     return toDelete;
   }
 }

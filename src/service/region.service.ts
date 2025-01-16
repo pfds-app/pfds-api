@@ -37,7 +37,7 @@ export class RegionService {
     if (!toDelete) {
       throw new BadRequestException("No Region with id = " + id + " was found");
     }
-    await this.repository.delete({ id });
+    await this.repository.softDelete({ id });
     return toDelete;
   }
 }
