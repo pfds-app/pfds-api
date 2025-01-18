@@ -24,7 +24,7 @@ import {
   UploadeSuccessResponse,
   User,
 } from "./rest";
-import { Role } from "src/model";
+import { Role, UserGender } from "src/model";
 import { UserStat } from "src/service/model";
 
 @Controller()
@@ -38,21 +38,61 @@ export class UserController {
   @Get("/users")
   @Authenticated()
   @ApiPagination()
-  @ApiCriteria({
-    name: "role",
-    type: "string",
-    enum: Role,
-  })
+  @ApiCriteria(
+    {
+      name: "role",
+      type: "string",
+      enum: Role,
+    },
+    { name: "nic", type: "string" },
+    { name: "apv", type: "string" },
+    { name: "lastName", type: "string" },
+    { name: "firstName", type: "string" },
+    { name: "username", type: "string" },
+    { name: "regionId", type: "string" },
+    { name: "committeeId", type: "string" },
+    { name: "associationId", type: "string" },
+    { name: "responsabilityId", type: "string" },
+    { name: "gender", type: "string", enum: UserGender }
+  )
   @ApiJfds({
     operationId: "getUsers",
     type: [User],
   })
   async findAll(
     @Pagination() pagination: PaginationParams,
-    @Query("role") role?: Role
+    @Query("role") role?: Role,
+    @Query("nic") nic?: string,
+    @Query("apv") apv?: string,
+    @Query("lastName") lastName?: string,
+    @Query("firstName") firstName?: string,
+    @Query("username") username?: string,
+    @Query("regionId") regionId?: string,
+    @Query("committeeId") committeeId?: string,
+    @Query("associationId") associationId?: string,
+    @Query("responsabilityId") responsabilityId?: string,
+    @Query("gender") gender?: UserGender
   ) {
     const users = await this.userService.findAll(pagination, {
+      nic,
       role,
+      apv,
+      gender,
+      username,
+      lastName,
+      firstName,
+      region: {
+        id: regionId,
+      },
+      association: {
+        id: associationId,
+      },
+      committee: {
+        id: committeeId,
+      },
+      responsability: {
+        id: responsabilityId,
+      },
     });
     return Promise.all(users.map((user) => this.userMapper.toRest(user)));
   }

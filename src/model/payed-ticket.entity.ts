@@ -1,7 +1,6 @@
 import {
   Column,
   CreateDateColumn,
-  DeleteDateColumn,
   Entity,
   ManyToOne,
   PrimaryColumn,
@@ -44,7 +43,4 @@ export class PayedTicket {
     onUpdate: "CURRENT_TIMESTAMP",
   })
   updatedAt: string;
-
-  @DeleteDateColumn({ name: "deleted_at" })
-  deletedAt?: Date;
 }

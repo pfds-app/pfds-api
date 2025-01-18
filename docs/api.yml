@@ -352,6 +352,59 @@ paths:
               - ASSOCIATION_MANAGER
               - SIMPLE_USER
             type: string
+        - name: nic
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: apv
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: lastName
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: firstName
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: username
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: regionId
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: committeeId
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: associationId
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: responsabilityId
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: gender
+          required: false
+          in: query
+          schema:
+            enum:
+              - MALE
+              - FEMALE
+            type: string
         - name: page
           required: false
           in: query
