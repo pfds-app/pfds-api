@@ -34,7 +34,7 @@ export class LedgerController {
   @ApiCriteria(
     { name: "name", type: "string" },
     { name: "year", type: "number" },
-    { name: "month", type: "number", minimum: 0, maximum: 11 }
+    { name: "month", type: "number", minimum: 1, maximum: 12 }
   )
   @ApiJfds({
     operationId: "getLedgers",
@@ -51,7 +51,8 @@ export class LedgerController {
       ledgerDate:
         month && year
           ? Raw(
-              (alias) => `YEAR(${alias}) = :year AND MONTH(${alias}) = :month`,
+              (alias) =>
+                `EXTRACT(YEAR FROM ${alias}) = :year AND EXTRACT(MONTH FROM ${alias}) = :month`,
               { month, year }
             )
           : undefined,

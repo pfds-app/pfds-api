@@ -19,7 +19,7 @@ export class LedgerService {
   constructor(
     @InjectRepository(Ledger)
     private readonly repository: Repository<Ledger>
-  ) {}
+  ) { }
 
   async findAll(pagination: PaginationParams, criteria: Criteria<Ledger>) {
     return findByCriteria<Ledger>({
@@ -32,26 +32,11 @@ export class LedgerService {
 
   async getLedgerStatByYear(year: number): Promise<LedgerStat[]> {
     return this.repository
-      .createQueryBuilder("entity")
-      .select("month.month", "month")
-      .addSelect(
-        `COALESCE(SUM(CASE WHEN EXTRACT(MONTH FROM a.date) = month.month THEN a.value END), 0)`,
-        "total"
-      )
-      .from((subQuery) => {
-        return subQuery
-          .select("generate_series(1, 12)", "month")
-          .from("generate_series(1, 12)", "month");
-      }, "month")
-      .leftJoin(
-        "A",
-        "a",
-        "EXTRACT(MONTH FROM a.date) = month.month AND EXTRACT(YEAR FROM a.date) = :year",
-        { year }
-      )
-      .addSelect("COUNT(*)", "totalCount")
-      .groupBy("month.month")
-      .orderBy("month.month", "ASC")
+      .createQueryBuilder("ledger")
+      .select(`COALESCE(SUM(ledger.price), 0)`, "count")
+      .addSelect("EXTRACT(MONTH FROM ledger.ledger_date)", "month")
+      .groupBy("EXTRACT(MONTH FROM ledger.ledger_date)")
+      .where("ledger.mouvement_type = 'IN' AND EXTRACT(YEAR FROM ledger.ledger_date) = :year", { year })
       .getRawMany();
   }
 
