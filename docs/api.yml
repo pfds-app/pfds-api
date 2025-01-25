@@ -756,11 +756,6 @@ paths:
     get:
       operationId: getAssociations
       parameters:
-        - name: name
-          required: false
-          in: query
-          schema:
-            type: string
         - name: page
           required: false
           in: query
@@ -1951,6 +1946,18 @@ paths:
           in: query
           schema:
             type: string
+        - name: year
+          required: false
+          in: query
+          schema:
+            type: number
+        - name: month
+          required: false
+          in: query
+          schema:
+            minimum: 0
+            maximum: 11
+            type: number
         - name: page
           required: false
           in: query
@@ -2050,6 +2057,59 @@ paths:
                 $ref: '#/components/schemas/ApiResponseError'
       security:
         - bearer: []
+      summary: ''
+      tags:
+        - Moneys
+  /ledgers/all/stats:
+    get:
+      operationId: getLedgerStats
+      parameters:
+        - name: year
+          required: false
+          in: query
+          schema:
+            type: number
+        - name: type
+          required: false
+          in: query
+          schema:
+            enum:
+              - ACCULUMATED
+              - PER_YEAR
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LedgerStat'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
       summary: ''
       tags:
         - Moneys
@@ -3697,6 +3757,16 @@ components:
         - price
         - createdAt
         - updatedAt
+    LedgerStat:
+      type: object
+      properties:
+        count:
+          type: string
+        month:
+          type: number
+      required:
+        - count
+        - month
     Operation:
       type: object
       properties:
