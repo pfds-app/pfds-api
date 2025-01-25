@@ -4,9 +4,9 @@ import { InjectRepository } from "@nestjs/typeorm";
 
 import { Association } from "src/model";
 import { PaginationParams } from "src/controller/decorators";
+import { Criteria } from "./utils/criteria";
 import { findByCriteria } from "./utils/find-by-cireria";
 import { UPDATED_AT_CREATED_AT_ORDER_BY } from "./utils/default-order-by";
-import { Criteria } from "./utils/criteria";
 
 @Injectable()
 export class AssociationService {
@@ -15,10 +15,13 @@ export class AssociationService {
     private readonly repository: Repository<Association>
   ) {}
 
-  async findAll(pagination: PaginationParams, criteria: Criteria<Association>) {
+  async findAll(
+    pagination: PaginationParams,
+    criteria?: Criteria<Association>
+  ) {
     return findByCriteria<Association>({
       repository: this.repository,
-      criteria,
+      criteria: criteria ?? {},
       pagination,
       order: UPDATED_AT_CREATED_AT_ORDER_BY,
     });

@@ -9,14 +9,16 @@ import {
   Query,
 } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
+import { Raw } from "typeorm";
 
 import { ApiCriteria, ApiJfds, ApiPagination } from "src/docs/decorators";
-import { LedgerService } from "src/service";
+import { LedgerService, LedgerStatType } from "src/service";
 import { Authenticated } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { Ledger } from "./rest";
 import { LedgerMapper } from "./mapper";
 import { Role } from "src/model";
+import { LedgerStat } from "src/service/model";
 
 @Controller()
 @ApiTags("Moneys")
@@ -29,19 +31,45 @@ export class LedgerController {
   @Get("/ledgers")
   @ApiPagination()
   @Authenticated()
-  @ApiCriteria({ name: "name", type: "string" })
+  @ApiCriteria(
+    { name: "name", type: "string" },
+    { name: "year", type: "number" },
+    { name: "month", type: "number", minimum: 0, maximum: 11 }
+  )
   @ApiJfds({
     operationId: "getLedgers",
     type: [Ledger],
   })
   async findAll(
     @Pagination() pagination: PaginationParams,
-    @Query("name") name?: string
+    @Query("name") name?: string,
+    @Query("year") year?: number,
+    @Query("month") month?: number
   ) {
     const ledgers = await this.ledgerService.findAll(pagination, {
       name,
+      ledgerDate:
+        month && year
+          ? Raw(
+              (alias) => `YEAR(${alias}) = :year AND MONTH(${alias}) = :month`,
+              { month, year }
+            )
+          : undefined,
     });
     return Promise.all(ledgers.map((role) => this.ledgerMapper.toRest(role)));
+  }
+
+  @Get("/ledgers/all/stats")
+  @ApiJfds({
+    type: [LedgerStat],
+    operationId: "getLedgerStats",
+  })
+  @ApiCriteria(
+    { name: "year", type: "number" },
+    { name: "type", type: "string", enum: LedgerStatType }
+  )
+  async getLedgerStats(@Query("year") year?: number) {
+    return this.ledgerService.getLedgerStatByYear(year);
   }
 
   @Get("/ledgers/:id")

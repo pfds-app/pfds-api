@@ -28,18 +28,12 @@ export class AssociationController {
 
   @Get("/associations")
   @ApiPagination()
-  @ApiCriteria({ name: "name", type: "string" })
   @ApiJfds({
     operationId: "getAssociations",
     type: [Association],
   })
-  async findAll(
-    @Pagination() pagination: PaginationParams,
-    @Query("name") name?: string
-  ) {
-    const associations = await this.associationService.findAll(pagination, {
-      name,
-    });
+  async findAll(@Pagination() pagination: PaginationParams) {
+    const associations = await this.associationService.findAll(pagination);
     return Promise.all(
       associations.map((role) => this.associationMapper.toRest(role))
     );

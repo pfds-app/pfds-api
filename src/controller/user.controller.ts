@@ -14,7 +14,7 @@ import { FormDataRequest } from "nestjs-form-data";
 
 import { ApiCriteria, ApiJfds, ApiPagination } from "src/docs/decorators";
 import { UserService, UserStatType } from "src/service";
-import { Authenticated } from "src/auth/decorators";
+import { Authenticated, AuthenticatedUser } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { UserMapper } from "./mapper";
 import {
@@ -24,7 +24,7 @@ import {
   UploadeSuccessResponse,
   User,
 } from "./rest";
-import { Role, UserGender } from "src/model";
+import { Role, UserGender, User as EntityUser } from "src/model";
 import { UserStat } from "src/service/model";
 
 @Controller()
@@ -60,6 +60,7 @@ export class UserController {
     type: [User],
   })
   async findAll(
+    @AuthenticatedUser() user: EntityUser,
     @Pagination() pagination: PaginationParams,
     @Query("role") role?: Role,
     @Query("nic") nic?: string,
@@ -82,7 +83,7 @@ export class UserController {
       lastName,
       firstName,
       region: {
-        id: regionId,
+        id: user?.role === Role.ADMIN ? regionId : user.region?.id,
       },
       association: {
         id: associationId,
