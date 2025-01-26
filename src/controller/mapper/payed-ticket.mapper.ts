@@ -34,6 +34,6 @@ export class PayedTicketMapper {
       );
     }
 
-    return this.payedTicketRepository.create({ ...entityPayedTicket, ticket });
+    return this.payedTicketRepository.create({ ticket, ...entityPayedTicket });
   }
 }

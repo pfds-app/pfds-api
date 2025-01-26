@@ -19,7 +19,7 @@ export class LedgerService {
   constructor(
     @InjectRepository(Ledger)
     private readonly repository: Repository<Ledger>
-  ) { }
+  ) {}
 
   async findAll(pagination: PaginationParams, criteria: Criteria<Ledger>) {
     return findByCriteria<Ledger>({
@@ -36,7 +36,10 @@ export class LedgerService {
       .select(`COALESCE(SUM(ledger.price), 0)`, "count")
       .addSelect("EXTRACT(MONTH FROM ledger.ledger_date)", "month")
       .groupBy("EXTRACT(MONTH FROM ledger.ledger_date)")
-      .where("ledger.mouvement_type = 'IN' AND EXTRACT(YEAR FROM ledger.ledger_date) = :year", { year })
+      .where(
+        "ledger.mouvement_type = 'IN' AND EXTRACT(YEAR FROM ledger.ledger_date) = :year",
+        { year }
+      )
       .getRawMany();
   }
 
