@@ -18,17 +18,16 @@ export class PresenceService {
   constructor(
     @InjectRepository(Presence)
     private readonly repository: Repository<Presence>,
-
-    @InjectRepository(Presence)
+    @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-
     private readonly activityService: ActivityService,
     private readonly datasource: DataSource
   ) {}
 
   async getPresenceStatus(
     pagination: PaginationParams,
-    activityId: string
+    activityId: string,
+    getIsPresent?: boolean
   ): Promise<PresenceStatus[]> {
     const activity = await this.activityService.findById(activityId);
     if (!activity) {
@@ -36,6 +35,14 @@ export class PresenceService {
         "Activity with id = " + activity + " was not found"
       );
     }
+
+    const presences = await this.repository.find({
+      where: {
+        activity: {
+          id: activityId,
+        },
+      },
+    });
 
     const isForAll = activity.roleType === ActivityRoleType.ALL;
     const filter = isForAll
@@ -46,22 +53,12 @@ export class PresenceService {
           { role: Role.ASSOCIATION_MANAGER },
           { role: Role.REGION_MANAGER },
         ];
-
     const users = await this.userRepository.find({
       where: filter,
-      ...createPagination(pagination),
       order: UPDATED_AT_CREATED_AT_ORDER_BY,
     });
 
-    const presences = await this.repository.find({
-      where: {
-        activity: {
-          id: activityId,
-        },
-      },
-    });
-
-    return users.map((user) => {
+    let results = users.map((user) => {
       const isPresent = presences.find(
         (presence) => presence.user.id === user.id
       );
@@ -70,6 +67,14 @@ export class PresenceService {
         isPresent: !!isPresent,
       };
     });
+
+    if (getIsPresent !== undefined) {
+      results = results.filter((el) => el.isPresent === getIsPresent);
+    }
+
+    const start = (pagination.page - 1) * pagination.pageSize;
+    const end = start + pagination.pageSize;
+    return results.slice(start, end);
   }
 
   async savePresences(presences: Presence[]): Promise<Presence[]> {

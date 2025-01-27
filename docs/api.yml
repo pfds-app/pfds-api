@@ -3154,6 +3154,11 @@ paths:
           in: path
           schema:
             type: string
+        - name: isPresent
+          required: false
+          in: query
+          schema:
+            type: boolean
         - name: page
           required: false
           in: query

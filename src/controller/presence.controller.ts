@@ -1,7 +1,7 @@
-import { Body, Controller, Get, Param, Put } from "@nestjs/common";
+import { Body, Controller, Get, Param, Put, Query } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 
-import { ApiJfds, ApiPagination } from "src/docs/decorators";
+import { ApiCriteria, ApiJfds, ApiPagination } from "src/docs/decorators";
 import { PresenceService } from "src/service";
 import { Authenticated } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";
@@ -20,17 +20,20 @@ export class PresenceController {
   @Get("/activities/:activityId/status")
   @ApiPagination()
   @Authenticated()
+  @ApiCriteria({ name: "isPresent", type: "boolean" })
   @ApiJfds({
     operationId: "getPresencesStatus",
     type: [PresenceStatus],
   })
   async findAll(
     @Pagination() pagination: PaginationParams,
-    @Param("activityId") activityId: string
+    @Param("activityId") activityId: string,
+    @Query("isPresent") isPresent?: boolean
   ) {
     const presenceStatus = await this.presenceService.getPresenceStatus(
       pagination,
-      activityId
+      activityId,
+      isPresent
     );
     return Promise.all(
       presenceStatus.map((el) => this.presenceMapper.statusToRest(el))
