@@ -1955,8 +1955,8 @@ paths:
           required: false
           in: query
           schema:
-            minimum: 0
-            maximum: 11
+            minimum: 1
+            maximum: 12
             type: number
         - name: page
           required: false
@@ -3145,6 +3145,123 @@ paths:
       summary: ''
       tags:
         - Resources
+  /activities/{activityId}/status:
+    get:
+      operationId: getPresencesStatus
+      parameters:
+        - name: activityId
+          required: true
+          in: path
+          schema:
+            type: string
+        - name: page
+          required: false
+          in: query
+          schema:
+            type: number
+            minimum: 1
+            default: 1
+        - name: pageSize
+          required: false
+          in: query
+          schema:
+            type: number
+            default: 10
+            minimum: 1
+            maximum: 500
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PresenceStatus'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+      security:
+        - bearer: []
+      summary: ''
+      tags:
+        - Resources
+  /activities/{activityId}/presences:
+    put:
+      operationId: crupdatePresences
+      parameters:
+        - name: activityId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                $ref: '#/components/schemas/CreatePresence'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Presence'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+      security:
+        - bearer: []
+      summary: ''
+      tags:
+        - Resources
 info:
   title: Jfds Api
   description: Jfds
@@ -3973,5 +4090,61 @@ components:
         - description
         - roleType
         - organisatorRole
+        - createdAt
+        - updatedAt
+    PresenceStatus:
+      type: object
+      properties:
+        user:
+          $ref: '#/components/schemas/User'
+        isPresent:
+          type: boolean
+      required:
+        - user
+        - isPresent
+    CreatePresence:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        activityId:
+          type: string
+          format: uuid
+        userId:
+          type: string
+          format: uuid
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - activityId
+        - userId
+        - createdAt
+        - updatedAt
+    Presence:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        activity:
+          $ref: '#/components/schemas/Activity'
+        user:
+          $ref: '#/components/schemas/User'
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - activity
+        - user
         - createdAt
         - updatedAt

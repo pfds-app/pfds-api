@@ -16,6 +16,7 @@ import {
   Ticket,
   PayedTicket,
   Activity,
+  Presence,
 } from "src/model";
 
 @Module({
@@ -39,6 +40,7 @@ import {
           Ticket,
           PayedTicket,
           Activity,
+          Presence,
         ],
         //WARNING: remove synchronize on prod
         synchronize: true,

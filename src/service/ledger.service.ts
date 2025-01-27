@@ -38,7 +38,7 @@ export class LedgerService {
       .groupBy("EXTRACT(MONTH FROM ledger.ledger_date)")
       .where(
         "ledger.mouvement_type = 'IN' AND EXTRACT(YEAR FROM ledger.ledger_date) = :year",
-        { year }
+        { year: +year }
       )
       .getRawMany();
   }

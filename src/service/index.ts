@@ -11,3 +11,4 @@ export * from "./operation.service";
 export * from "./ticket.service";
 export * from "./payed-ticket.service";
 export * from "./activity.service";
+export * from "./presence.service";

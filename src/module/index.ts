@@ -11,3 +11,4 @@ export * from "./operation.module";
 export * from "./ticket.module";
 export * from "./payed-ticket.module";
 export * from "./activity.module";
+export * from "./presence.module";

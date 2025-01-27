@@ -18,3 +18,6 @@ export * from "./operation-result";
 export * from "./uploade-success-response";
 export * from "./profile-picture";
 export * from "./activity";
+export * from "./presence-status";
+export * from "./presence";
+export * from "./create-presence";

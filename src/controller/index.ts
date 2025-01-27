@@ -11,3 +11,4 @@ export * from "./operation.controller";
 export * from "./ticket.controller";
 export * from "./payed-ticket.controller";
 export * from "./activity.controller";
+export * from "./presence.controller";

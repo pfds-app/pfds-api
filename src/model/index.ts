@@ -14,3 +14,4 @@ export * from "./ticket.entity";
 export * from "./payed-ticket.entity";
 export * from "./activity.entity";
 export * from "./activity-role-type.enum";
+export * from "./presence.entity";
