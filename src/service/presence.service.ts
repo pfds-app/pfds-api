@@ -10,7 +10,6 @@ import { ActivityRoleType, Presence, Role, User } from "src/model";
 import { ActivityService } from "./activity.service";
 import { PresenceStatus } from "./model";
 import { PaginationParams } from "src/controller/decorators";
-import { createPagination } from "./utils/create-pagination";
 import { UPDATED_AT_CREATED_AT_ORDER_BY } from "./utils/default-order-by";
 
 @Injectable()
@@ -77,28 +76,33 @@ export class PresenceService {
     return results.slice(start, end);
   }
 
-  async savePresences(presences: Presence[]): Promise<Presence[]> {
+  async savePresences(
+    activityId: string,
+    presences: Presence[]
+  ): Promise<Presence[]> {
     await this.validate(presences);
     const currentPresences = await this.repository.find({
       where: {
         activity: {
-          id: presences[0].activity.id,
+          id: activityId,
         },
       },
     });
 
     return await this.datasource.transaction(async (entityManager) => {
-      await entityManager.delete(
-        Presence,
-        currentPresences.map((el) => el.id)
-      );
+      if (currentPresences.length !== 0) {
+        await entityManager.delete(
+          Presence,
+          currentPresences.map((el) => el.id)
+        );
+      }
       return entityManager.save(Presence, presences);
     });
   }
 
   async validate(presenceStatus: Presence[]) {
-    if (presenceStatus.length < 1) {
-      throw new BadRequestException("Can create at least one activity");
+    if (presenceStatus.length == 0) {
+      return;
     }
 
     const presenceId = presenceStatus[0].activity.id;

@@ -55,14 +55,17 @@ export class PresenceController {
     type: [Presence],
   })
   async crupdatePresences(
-    @Param("activityId") _activityId: string,
+    @Param("activityId") activityId: string,
     @Body() presences: CreatePresence[]
   ) {
     const mapped = await Promise.all(
       presences.map((presence) => this.presenceMapper.createToDomain(presence))
     );
 
-    const savedPresences = await this.presenceService.savePresences(mapped);
+    const savedPresences = await this.presenceService.savePresences(
+      activityId,
+      mapped
+    );
 
     return Promise.all(
       savedPresences.map((presence) => this.presenceMapper.toRest(presence))
