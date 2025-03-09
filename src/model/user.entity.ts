@@ -15,6 +15,7 @@ import { Committee } from "./committee.entity";
 import { Association } from "./association.entity";
 import { UserGender } from "./user-genger.enum";
 import { Responsability } from "./responsability.entity";
+import { Sacrament } from "./sacrament.entity";
 
 @Entity()
 export class User {
@@ -99,6 +100,13 @@ export class User {
     onDelete: "CASCADE",
   })
   responsability?: Responsability;
+
+  @ManyToOne(() => Sacrament, {
+    eager: true,
+    nullable: true,
+    onDelete: "CASCADE",
+  })
+  sacrament?: Sacrament;
 
   @BeforeInsert()
   async hashPasswordBeforeInsert() {

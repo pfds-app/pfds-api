@@ -13,6 +13,7 @@ import {
   Committee,
   Region,
   Responsability,
+  Sacrament,
   User,
 } from "src/model";
 import {
@@ -20,6 +21,7 @@ import {
   CommitteeService,
   RegionService,
   ResponsabilityService,
+  SacramentService,
   UserService,
 } from "src/service";
 import {
@@ -27,6 +29,7 @@ import {
   CommitteeMapper,
   RegionMapper,
   ResponsabilityMapper,
+  SacramentMapper,
   UserMapper,
 } from "src/controller/mapper";
 import { UserValidator } from "src/service/validator/user.validator";
@@ -52,6 +55,7 @@ import { UserValidator } from "src/service/validator/user.validator";
       Association,
       Committee,
       Region,
+      Sacrament,
     ]),
   ],
   providers: [
@@ -69,6 +73,8 @@ import { UserValidator } from "src/service/validator/user.validator";
     RegionMapper,
     AssociationService,
     AssociationMapper,
+    SacramentService,
+    SacramentMapper,
     RoleGuard,
   ],
   controllers: [AuthController],

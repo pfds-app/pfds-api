@@ -6,11 +6,10 @@ import {
   NotFoundException,
   Param,
   Put,
-  Query,
 } from "@nestjs/common";
 import { ApiBody, ApiTags } from "@nestjs/swagger";
 
-import { ApiCriteria, ApiJfds, ApiPagination } from "src/docs/decorators";
+import { ApiJfds, ApiPagination } from "src/docs/decorators";
 import { AssociationService } from "src/service";
 import { Authenticated } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";

@@ -1,6 +1,6 @@
 import { ApiProperty } from "@nestjs/swagger";
 
-import { Role, UserGender } from "src/model";
+import { Role, Sacrament, UserGender } from "src/model";
 import { Committee } from "./committee";
 import { Association } from "./association";
 import { Region } from "./region";
@@ -60,4 +60,7 @@ export class User {
 
   @ApiProperty({ type: Association, required: false })
   association?: Association;
+
+  @ApiProperty({ type: Sacrament, required: false })
+  sacrament?: Sacrament;
 }

@@ -155,7 +155,7 @@ export class UserController {
   }
 
   @Post("/users")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN, Role.REGION_MANAGER] })
   @ApiBody({
     type: CreateUser,
   })

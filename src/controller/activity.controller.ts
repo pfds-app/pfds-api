@@ -17,7 +17,6 @@ import { Authenticated } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { Activity } from "./rest";
 import { ActivityMapper } from "./mapper";
-import { Role } from "src/model";
 
 @Controller()
 @ApiTags("Resources")
@@ -67,7 +66,7 @@ export class ActivityController {
   }
 
   @Put("/activities")
-  @Authenticated({ roles: [Role.ADMIN] })
+  @Authenticated()
   @ApiBody({ type: [Activity] })
   @ApiJfds({
     operationId: "crupdateActivities",
@@ -84,7 +83,6 @@ export class ActivityController {
   }
 
   @Delete("/activities/:id")
-  @Authenticated({ roles: [Role.ADMIN] })
   @ApiJfds({
     operationId: "deleteActivityById",
     type: Activity,

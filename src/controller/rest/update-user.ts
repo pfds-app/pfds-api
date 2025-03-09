@@ -83,4 +83,9 @@ export class UpdateUser {
   @IsUUID()
   @ApiProperty({ format: "uuid", required: false })
   associationId?: string;
+
+  @IsOptional()
+  @IsUUID()
+  @ApiProperty({ format: "uuid", required: false })
+  sacramentId?: string;
 }

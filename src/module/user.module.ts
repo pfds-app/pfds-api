@@ -11,6 +11,7 @@ import { RegionModule } from "./region.module";
 import { CommitteeModule } from "./committee.module";
 import { ResponsabilityModule } from "./responsability.module";
 import { UserValidator } from "src/service/validator/user.validator";
+import { SacramentModule } from "./sacrament.module";
 
 @Module({
   imports: [
@@ -19,6 +20,7 @@ import { UserValidator } from "src/service/validator/user.validator";
     RegionModule,
     CommitteeModule,
     ResponsabilityModule,
+    SacramentModule,
     AuthModule,
     TypeOrmModule.forFeature([User]),
   ],

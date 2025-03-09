@@ -103,7 +103,7 @@ export class UserService {
         fs.mkdirSync(uploadDir, { recursive: true });
       }
       fs.writeFileSync(filePath, file.buffer);
-    } catch (error) {
+    } catch {
       throw new InternalServerErrorException(
         "Error occured whe try to update profile picture"
       );

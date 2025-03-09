@@ -9,21 +9,25 @@ import {
   User as EntityUser,
   Region,
   Responsability,
+  Sacrament,
 } from "src/model";
 import {
   AssociationService,
   CommitteeService,
   RegionService,
   ResponsabilityService,
+  SacramentService,
 } from "src/service";
 import { ResponsabilityMapper } from "./responsability.mapper";
 import { AssociationMapper } from "./association.mapper";
 import { RegionMapper } from "./region.mapper";
 import { CommitteeMapper } from "./committee.mapper";
+import { SacramentMapper } from "./sacrament.mapper";
 
 @Injectable()
 export class UserMapper {
   constructor(
+    private readonly sacramentService: SacramentService,
     private readonly associationService: AssociationService,
     private readonly associationMapper: AssociationMapper,
     private readonly regionService: RegionService,
@@ -32,6 +36,7 @@ export class UserMapper {
     private readonly committeeMapper: CommitteeMapper,
     private readonly responsabilityService: ResponsabilityService,
     private readonly responsabilityMapper: ResponsabilityMapper,
+    private readonly sacramentMapper: SacramentMapper,
     @InjectRepository(EntityUser)
     private readonly userRepository: Repository<EntityUser>
   ) {}
@@ -47,6 +52,7 @@ export class UserMapper {
     associationId,
     committeeId,
     responsabilityId,
+    sacramentId,
     id,
     ...baseEntityUser
   }: UpdateUser): Promise<EntityUser> {
@@ -55,6 +61,11 @@ export class UserMapper {
       throw new BadRequestException(
         "EntityUser with id=" + id + " does not exist"
       );
+    }
+
+    let sacrament: Sacrament;
+    if (sacramentId) {
+      sacrament = await this.sacramentService.findById(sacramentId);
     }
 
     let region: Region;
@@ -80,6 +91,9 @@ export class UserMapper {
 
     return this.userRepository.create({
       id,
+      sacrament: sacrament
+        ? await this.sacramentMapper.toDomain(sacrament)
+        : undefined,
       responsability: responsability
         ? await this.responsabilityMapper.toDomain(responsability)
         : undefined,
@@ -101,8 +115,14 @@ export class UserMapper {
     committeeId,
     associationId,
     regionId,
+    sacramentId,
     ...baseEntityUser
   }: CreateUser): Promise<EntityUser> {
+    let sacrament: Sacrament;
+    if (sacramentId) {
+      sacrament = await this.sacramentService.findById(sacramentId);
+    }
+
     let region: Region;
     if (regionId) {
       region = await this.regionService.findById(regionId);
@@ -126,6 +146,9 @@ export class UserMapper {
 
     return this.userRepository.create({
       ...baseEntityUser,
+      sacrament: sacrament
+        ? await this.sacramentMapper.toDomain(sacrament)
+        : undefined,
       responsability: responsability
         ? await this.responsabilityMapper.toDomain(responsability)
         : undefined,
