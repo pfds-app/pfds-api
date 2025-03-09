@@ -11,6 +11,7 @@ import { JwtAuthGuard, RoleGuard } from "./guards";
 import {
   Association,
   Committee,
+  DeletedRole,
   Region,
   Responsability,
   Sacrament,
@@ -56,6 +57,7 @@ import { UserValidator } from "src/service/validator/user.validator";
       Committee,
       Region,
       Sacrament,
+      DeletedRole,
     ]),
   ],
   providers: [

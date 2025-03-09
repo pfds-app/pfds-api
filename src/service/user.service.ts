@@ -1,4 +1,4 @@
-import { Repository } from "typeorm";
+import { DataSource, Repository } from "typeorm";
 import {
   BadRequestException,
   Injectable,
@@ -11,7 +11,7 @@ import { v4 as uuid } from "uuid";
 import * as fs from "fs";
 import * as path from "path";
 
-import { User } from "src/model";
+import { DeletedRole, Role, User } from "src/model";
 import { PaginationParams } from "src/controller/decorators";
 import { Criteria } from "./utils/criteria";
 import { UploadeSuccessResponse } from "src/controller/rest";
@@ -44,7 +44,10 @@ const mapStringUserStatToNumber = (
 export class UserService {
   constructor(
     @InjectRepository(User) private readonly repository: Repository<User>,
-    private readonly userValidator: UserValidator
+    @InjectRepository(DeletedRole)
+    private readonly deletedRoleRepository: Repository<DeletedRole>,
+    private readonly userValidator: UserValidator,
+    private readonly datasource: DataSource
   ) {}
 
   async findAll(pagination: PaginationParams, criteria: Criteria<User>) {
@@ -68,7 +71,15 @@ export class UserService {
     await this.userValidator.checkRequiredFieldsByRole(user);
     user.photo = undefined; // should not set profile image (only with updateProfilePicture)
     const createdUser = this.repository.create(user); // just to make the password will be hashed
-    return this.repository.save(createdUser);
+
+    try {
+      return await this.repository.save(createdUser);
+    } catch (error) {
+      if (error?.code === "23505") {
+        throw new BadRequestException("Email or Username already exists.");
+      }
+      throw error;
+    }
   }
 
   async findByEmail(email: string) {
@@ -119,7 +130,14 @@ export class UserService {
 
   async updateUserInfos(user: User): Promise<User> {
     await this.userValidator.checkRequiredFieldsByRole(user);
-    return this.repository.save(user);
+    try {
+      return await this.repository.save(user);
+    } catch (error) {
+      if (error?.code === "23505") {
+        throw new BadRequestException("Email or Username already exists.");
+      }
+      throw error;
+    }
   }
 
   async getUserCreatedStatByYear(
@@ -234,9 +252,42 @@ export class UserService {
   async deleteById(id: string) {
     const toDelete = await this.findById(id);
     if (!toDelete) {
-      throw new BadRequestException("No Ticket with id = " + id + " was found");
+      throw new BadRequestException("No User with id = " + id + " was found");
     }
     await this.repository.softDelete({ id });
     return toDelete;
+  }
+
+  async deleteUserRole(id: string): Promise<User> {
+    const user = await this.findById(id);
+    if (!user) {
+      throw new BadRequestException("No User with id = " + id + " was found");
+    }
+
+    user.role = Role.SIMPLE_USER;
+
+    return await this.datasource.transaction(async (entityManager) => {
+      const toSave = entityManager.create(DeletedRole, {
+        id: uuid(),
+        role: user.role,
+        user,
+      });
+
+      await entityManager.save(DeletedRole, toSave);
+      return entityManager.save(user);
+    });
+  }
+  async findDeletedRoles(
+    pagination: PaginationParams,
+    criteria: Criteria<DeletedRole>
+  ) {
+    return findByCriteria<DeletedRole>({
+      repository: this.deletedRoleRepository,
+      criteria,
+      pagination,
+      order: {
+        createdAt: "DESC",
+      },
+    });
   }
 }

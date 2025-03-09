@@ -24,7 +24,7 @@ import {
   UploadeSuccessResponse,
   User,
 } from "./rest";
-import { Role, UserGender, User as EntityUser } from "src/model";
+import { Role, UserGender, User as EntityUser, DeletedRole } from "src/model";
 import { UserStat } from "src/service/model";
 
 @Controller()
@@ -196,5 +196,43 @@ export class UserController {
   async deleteUserById(@Param("id") id: string) {
     const deletedUser = await this.userService.deleteById(id);
     return this.userMapper.toRest(deletedUser);
+  }
+
+  @Get("/deleted-roles")
+  @Authenticated()
+  @ApiPagination()
+  @ApiCriteria({
+    name: "role",
+    type: "string",
+    enum: Role,
+  })
+  @ApiJfds({
+    operationId: "findDeletedRoles",
+    type: [DeletedRole],
+  })
+  async findDeletedRoles(
+    @Pagination() pagination: PaginationParams,
+    @Query("role") role?: Role
+  ) {
+    const deletedRoles = await this.userService.findDeletedRoles(pagination, {
+      role,
+    });
+    return Promise.all(
+      deletedRoles.map((deletedRole) => ({
+        ...deletedRole,
+        user: this.userMapper.toRest(deletedRole.user),
+      }))
+    );
+  }
+
+  @Delete("/users/:id/role")
+  @Authenticated()
+  @ApiJfds({
+    operationId: "deleteUserRole",
+    type: DeletedRole,
+  })
+  async deleteUserRole(@Param("id") id: string) {
+    const user = await this.userService.deleteUserRole(id);
+    return this.userMapper.toRest(user);
   }
 }
