@@ -341,6 +341,11 @@ paths:
     get:
       operationId: getUsers
       parameters:
+        - name: q
+          required: false
+          in: query
+          schema:
+            type: string
         - name: role
           required: false
           in: query
@@ -377,6 +382,16 @@ paths:
           in: query
           schema:
             type: string
+        - name: responsabilityId
+          required: false
+          in: query
+          schema:
+            type: string
+        - name: sacramentId
+          required: false
+          in: query
+          schema:
+            type: string
         - name: regionId
           required: false
           in: query
@@ -388,11 +403,6 @@ paths:
           schema:
             type: string
         - name: associationId
-          required: false
-          in: query
-          schema:
-            type: string
-        - name: responsabilityId
           required: false
           in: query
           schema:
@@ -749,6 +759,119 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponseError'
+      summary: ''
+      tags:
+        - Users
+  /deleted-roles:
+    get:
+      operationId: findDeletedRoles
+      parameters:
+        - name: role
+          required: false
+          in: query
+          schema:
+            enum:
+              - ADMIN
+              - REGION_MANAGER
+              - COMMITTEE_MANAGER
+              - ASSOCIATION_MANAGER
+              - SIMPLE_USER
+            type: string
+        - name: page
+          required: false
+          in: query
+          schema:
+            type: number
+            minimum: 1
+            default: 1
+        - name: pageSize
+          required: false
+          in: query
+          schema:
+            type: number
+            default: 10
+            minimum: 1
+            maximum: 500
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DeletedRole'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+      security:
+        - bearer: []
+      summary: ''
+      tags:
+        - Users
+  /users/{id}/role:
+    delete:
+      operationId: deleteUserRole
+      parameters:
+        - name: id
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DeletedRole'
+        '400':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '403':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '404':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+        '500':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ApiResponseError'
+      security:
+        - bearer: []
       summary: ''
       tags:
         - Users
@@ -3140,8 +3263,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ApiResponseError'
-      security:
-        - bearer: []
       summary: ''
       tags:
         - Resources
@@ -3401,6 +3522,25 @@ components:
         - code
         - createdAt
         - updatedAt
+    Sacrament:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+      required:
+        - id
+        - name
+        - createdAt
+        - updatedAt
     Whoami:
       type: object
       properties:
@@ -3453,6 +3593,8 @@ components:
           $ref: '#/components/schemas/Region'
         association:
           $ref: '#/components/schemas/Association'
+        sacrament:
+          $ref: '#/components/schemas/Sacrament'
         token:
           type: string
       required:
@@ -3557,6 +3699,9 @@ components:
         associationId:
           type: string
           format: uuid
+        sacramentId:
+          type: string
+          format: uuid
         password:
           type: string
         adminApiKey:
@@ -3627,6 +3772,8 @@ components:
           $ref: '#/components/schemas/Region'
         association:
           $ref: '#/components/schemas/Association'
+        sacrament:
+          $ref: '#/components/schemas/Sacrament'
       required:
         - id
         - email
@@ -3703,6 +3850,9 @@ components:
         associationId:
           type: string
           format: uuid
+        sacramentId:
+          type: string
+          format: uuid
       required:
         - id
         - email
@@ -3769,6 +3919,9 @@ components:
         associationId:
           type: string
           format: uuid
+        sacramentId:
+          type: string
+          format: uuid
         password:
           type: string
       required:
@@ -3800,25 +3953,29 @@ components:
         - maleCount
         - femaleCount
         - totalCount
-    Sacrament:
+    DeletedRole:
       type: object
       properties:
         id:
           type: string
-          format: uuid
-        name:
+        role:
           type: string
+          enum:
+            - ADMIN
+            - REGION_MANAGER
+            - COMMITTEE_MANAGER
+            - ASSOCIATION_MANAGER
+            - SIMPLE_USER
         createdAt:
           type: string
           format: date-time
-        updatedAt:
-          type: string
-          format: date-time
+        user:
+          $ref: '#/components/schemas/User'
       required:
         - id
-        - name
+        - role
         - createdAt
-        - updatedAt
+        - user
     Event:
       type: object
       properties:

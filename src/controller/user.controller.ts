@@ -26,6 +26,8 @@ import {
 } from "./rest";
 import { Role, UserGender, User as EntityUser, DeletedRole } from "src/model";
 import { UserStat } from "src/service/model";
+import { Criteria } from "src/service/utils/criteria";
+import { ILike } from "typeorm";
 
 @Controller()
 @ApiTags("Users")
@@ -51,8 +53,10 @@ export class UserController {
     { name: "username", type: "string" },
     { name: "regionId", type: "string" },
     { name: "committeeId", type: "string" },
+    { name: "sacramentId", type: "string" },
     { name: "associationId", type: "string" },
     { name: "responsabilityId", type: "string" },
+    { name: "q", type: "string" },
     { name: "gender", type: "string", enum: UserGender }
   )
   @ApiJfds({
@@ -62,39 +66,104 @@ export class UserController {
   async findAll(
     @AuthenticatedUser() user: EntityUser,
     @Pagination() pagination: PaginationParams,
+    @Query("q") q?: string,
     @Query("role") role?: Role,
     @Query("nic") nic?: string,
     @Query("apv") apv?: string,
     @Query("lastName") lastName?: string,
     @Query("firstName") firstName?: string,
     @Query("username") username?: string,
+    @Query("responsabilityId") responsabilityId?: string,
+    @Query("sacramentId") sacramentId?: string,
     @Query("regionId") regionId?: string,
     @Query("committeeId") committeeId?: string,
     @Query("associationId") associationId?: string,
-    @Query("responsabilityId") responsabilityId?: string,
     @Query("gender") gender?: UserGender
   ) {
-    const users = await this.userService.findAll(pagination, {
-      nic,
-      role,
-      apv,
-      gender,
-      username,
-      lastName,
-      firstName,
-      region: {
-        id: user?.role === Role.ADMIN ? regionId : user.region?.id,
-      },
-      association: {
-        id: associationId,
-      },
-      committee: {
-        id: committeeId,
-      },
-      responsability: {
-        id: responsabilityId,
-      },
-    });
+    const isSuperAdmin = [Role.ADMIN, Role.REGION_MANAGER].includes(user.role);
+    let qFilters: Criteria<EntityUser> = [];
+    if (q) {
+      qFilters = [
+        {
+          firstName: ILike(`%${q}%`),
+          nic,
+          role,
+          apv,
+          gender,
+          username,
+          lastName,
+          region: {
+            id: user?.role === Role.ADMIN ? regionId : user.region?.id,
+          },
+          association: {
+            id: isSuperAdmin ? associationId : user.association?.id,
+          },
+          committee: {
+            id: isSuperAdmin ? committeeId : user.committee?.id,
+          },
+          responsability: {
+            id: responsabilityId,
+          },
+          sacrament: {
+            id: sacramentId,
+          },
+        },
+        {
+          lastName: ILike(`%${q}%`),
+          nic,
+          role,
+          apv,
+          gender,
+          username,
+          firstName,
+          region: {
+            id: user?.role === Role.ADMIN ? regionId : user.region?.id,
+          },
+          association: {
+            id: isSuperAdmin ? associationId : user.association?.id,
+          },
+          committee: {
+            id: isSuperAdmin ? committeeId : user.committee?.id,
+          },
+          responsability: {
+            id: responsabilityId,
+          },
+          sacrament: {
+            id: sacramentId,
+          },
+        },
+      ];
+    }
+
+    const users = await this.userService.findAll(
+      pagination,
+      q
+        ? qFilters
+        : {
+            nic,
+            role,
+            apv,
+            gender,
+            username,
+            lastName,
+            firstName,
+            region: {
+              id: user?.role === Role.ADMIN ? regionId : user.region?.id,
+            },
+            association: {
+              id: isSuperAdmin ? associationId : user.association?.id,
+            },
+            committee: {
+              id: isSuperAdmin ? committeeId : user.committee?.id,
+            },
+            responsability: {
+              id: responsabilityId,
+            },
+            sacrament: {
+              id: sacramentId,
+            },
+          }
+    );
     return Promise.all(users.map((user) => this.userMapper.toRest(user)));
   }
 
