@@ -30,7 +30,7 @@ export class LedgerController {
 
   @Get("/ledgers")
   @ApiPagination()
-  @Authenticated({ roles: [Role.ADMIN] })
+  @Authenticated()
   @ApiCriteria(
     { name: "name", type: "string" },
     { name: "year", type: "number" },

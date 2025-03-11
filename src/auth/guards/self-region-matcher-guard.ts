@@ -39,7 +39,6 @@ export class SelfRegionMatcherGuard implements CanActivate {
       return true;
     } catch (e) {
       if (e instanceof ForbiddenException) {
-        console.log("Here");
         return false;
       }
       //WE DON'T KNOW WHAT HAPENED SO PASS IT
@@ -49,7 +48,7 @@ export class SelfRegionMatcherGuard implements CanActivate {
 
   async verify(user: User, otherUser: User) {
     const isAdmin = user.role === Role.ADMIN;
-    const isOtherRegion = user.region !== otherUser.region;
+    const isOtherRegion = user.region?.id !== otherUser.region?.id;
 
     if (!isAdmin && isOtherRegion) {
       throw new ForbiddenException("User not in the same region");

@@ -84,7 +84,7 @@ export class UserValidator {
     if (
       beforeUpdate.role === Role.ADMIN ||
       updatedUser.role === Role.ADMIN ||
-      beforeUpdate.region !== authenticatedUser.region
+      beforeUpdate.region?.id !== authenticatedUser.region?.id
     ) {
       throw new ForbiddenException("Required valide permission");
     }
@@ -98,8 +98,7 @@ export class UserValidator {
     if (
       beforeUpdate.role !== updatedUser.role ||
       beforeUpdate?.association?.id !== updatedUser?.association?.id ||
-      authenticatedUser?.committee?.id !== updatedUser?.committee?.id ||
-      beforeUpdate.region !== authenticatedUser.region
+      beforeUpdate?.region?.id !== authenticatedUser?.region?.id
     ) {
       throw new ForbiddenException("Required valide permission");
     }
@@ -113,7 +112,6 @@ export class UserValidator {
     if (
       beforeUpdate?.role !== updatedUser?.role ||
       beforeUpdate?.committee?.id !== updatedUser?.committee?.id ||
-      authenticatedUser?.association?.id !== updatedUser?.association?.id ||
       beforeUpdate?.region?.id !== authenticatedUser?.region?.id
     ) {
       throw new ForbiddenException("Required valide permission");

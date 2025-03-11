@@ -48,7 +48,7 @@ export class UserService {
     private readonly deletedRoleRepository: Repository<DeletedRole>,
     private readonly userValidator: UserValidator,
     private readonly datasource: DataSource
-  ) { }
+  ) {}
 
   async findAll(pagination: PaginationParams, criteria: Criteria<User>) {
     return findByCriteria<User>({

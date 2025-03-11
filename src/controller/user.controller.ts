@@ -43,14 +43,7 @@ export class UserController {
   ) {}
 
   @Get("/users-member-count")
-  @Authenticated({
-    roles: [
-      Role.ADMIN,
-      Role.COMMITTEE_MANAGER,
-      Role.REGION_MANAGER,
-      Role.ASSOCIATION_MANAGER,
-    ],
-  })
+  @Authenticated()
   @ApiJfds({
     operationId: "getUserMemberCount",
     type: Count,
@@ -61,7 +54,7 @@ export class UserController {
     const users = await this.userRepository.find({
       where: {
         region: {
-          id: user?.role !== Role.ADMIN ? undefined : user?.region?.id,
+          id: user?.role === Role.ADMIN ? undefined : user?.region?.id,
         },
         association: {
           id:
@@ -145,16 +138,24 @@ export class UserController {
         id: user.role === Role.ADMIN ? regionId : user.region?.id,
       },
       association: {
-        id:
-          user.role === Role.ADMIN || user.role === Role.REGION_MANAGER
+        id: q
+          ? undefined
+          : user.role === Role.ADMIN || user.role === Role.REGION_MANAGER
             ? associationId
-            : user.association.id,
+            : user.role === Role.SIMPLE_USER ||
+                user.role === Role.ASSOCIATION_MANAGER
+              ? user.association?.id
+              : undefined,
       },
       committee: {
-        id:
-          user.role === Role.ADMIN || user.role === Role.REGION_MANAGER
+        id: q
+          ? undefined
+          : user.role === Role.ADMIN || user.role === Role.REGION_MANAGER
             ? committeeId
-            : user.committee.id,
+            : user.role === Role.SIMPLE_USER ||
+                user.role === Role.COMMITTEE_MANAGER
+              ? user.committee?.id
+              : undefined,
       },
       responsability: {
         id: responsabilityId,
@@ -256,7 +257,7 @@ export class UserController {
     const isAdmin = authenticatedUser.role === Role.ADMIN;
     const mappedUser = await this.userMapper.createToDomain(createUser);
 
-    if (!isAdmin && authenticatedUser.region !== mappedUser.region) {
+    if (!isAdmin && authenticatedUser.region?.id !== mappedUser.region?.id) {
       throw new ForbiddenException(
         "Should create only a user with the same region"
       );
