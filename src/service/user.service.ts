@@ -11,7 +11,7 @@ import { v4 as uuid } from "uuid";
 import * as fs from "fs";
 import * as path from "path";
 
-import { DeletedRole, User } from "src/model";
+import { DeletedRole, Role, User } from "src/model";
 import { PaginationParams } from "src/controller/decorators";
 import { Criteria } from "./utils/criteria";
 import { UploadeSuccessResponse } from "src/controller/rest";
@@ -48,7 +48,7 @@ export class UserService {
     private readonly deletedRoleRepository: Repository<DeletedRole>,
     private readonly userValidator: UserValidator,
     private readonly datasource: DataSource
-  ) {}
+  ) { }
 
   async findAll(pagination: PaginationParams, criteria: Criteria<User>) {
     return findByCriteria<User>({
@@ -141,7 +141,7 @@ export class UserService {
 
     try {
       return this.datasource.transaction(async (entityManager) => {
-        if (isRoleUpdated) {
+        if (isRoleUpdated && user.role !== Role.SIMPLE_USER) {
           const toSave = entityManager.create(DeletedRole, {
             id: uuid(),
             role: beforeUpdate.role,

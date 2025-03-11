@@ -1,5 +1,6 @@
 import { CanActivate, ExecutionContext, Injectable } from "@nestjs/common";
 import { Reflector } from "@nestjs/core";
+import { Role } from "src/model";
 
 @Injectable()
 export class SelfMatcherGuard implements CanActivate {
@@ -11,6 +12,10 @@ export class SelfMatcherGuard implements CanActivate {
 
     if (!user) {
       return false;
+    }
+
+    if (user.role !== Role.SIMPLE_USER) {
+      return true;
     }
 
     const paramKey = this.reflector.get<string>(
