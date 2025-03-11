@@ -11,7 +11,7 @@ import { v4 as uuid } from "uuid";
 import * as fs from "fs";
 import * as path from "path";
 
-import { DeletedRole, Role, User } from "src/model";
+import { DeletedRole, User } from "src/model";
 import { PaginationParams } from "src/controller/decorators";
 import { Criteria } from "./utils/criteria";
 import { UploadeSuccessResponse } from "src/controller/rest";
@@ -70,7 +70,7 @@ export class UserService {
 
     await this.userValidator.checkRequiredFieldsByRole(user);
     user.photo = undefined; // should not set profile image (only with updateProfilePicture)
-    const createdUser = this.repository.create(user); // just to make the password will be hashed
+    const createdUser = this.repository.create(user); // just to make sure that the password will be hashed
 
     try {
       return await this.repository.save(createdUser);
@@ -128,10 +128,30 @@ export class UserService {
     };
   }
 
-  async updateUserInfos(user: User): Promise<User> {
+  async updateUserInfos(authenticatedUser: User, user: User): Promise<User> {
+    const beforeUpdate = await this.findById(user.id);
     await this.userValidator.checkRequiredFieldsByRole(user);
+    await this.userValidator.verifyUpdatePrivilege(
+      authenticatedUser,
+      beforeUpdate,
+      user
+    );
+
+    const isRoleUpdated = beforeUpdate.role !== user.role;
+
     try {
-      return await this.repository.save(user);
+      return this.datasource.transaction(async (entityManager) => {
+        if (isRoleUpdated) {
+          const toSave = entityManager.create(DeletedRole, {
+            id: uuid(),
+            role: beforeUpdate.role,
+            user,
+          });
+          await entityManager.save(DeletedRole, toSave);
+        }
+
+        return entityManager.save(User, user);
+      });
     } catch (error) {
       if (error?.code === "23505") {
         throw new BadRequestException("Email or Username already exists.");
@@ -258,25 +278,6 @@ export class UserService {
     return toDelete;
   }
 
-  async deleteUserRole(id: string): Promise<User> {
-    const user = await this.findById(id);
-    if (!user) {
-      throw new BadRequestException("No User with id = " + id + " was found");
-    }
-
-    user.role = Role.SIMPLE_USER;
-
-    return await this.datasource.transaction(async (entityManager) => {
-      const toSave = entityManager.create(DeletedRole, {
-        id: uuid(),
-        role: user.role,
-        user,
-      });
-
-      await entityManager.save(DeletedRole, toSave);
-      return entityManager.save(user);
-    });
-  }
   async findDeletedRoles(
     pagination: PaginationParams,
     criteria: Criteria<DeletedRole>

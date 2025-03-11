@@ -12,9 +12,11 @@ import { TicketService } from "src/service";
 import { UserModule } from "./user.module";
 import { OperationModule } from "./operation.module";
 import { PayedTicketModule } from "./payed-ticket.module";
+import { AuthModule } from "src/auth";
 
 @Module({
   imports: [
+    AuthModule,
     PayedTicketModule,
     UserModule,
     OperationModule,

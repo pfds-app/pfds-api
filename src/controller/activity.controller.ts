@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   NotFoundException,
   Param,
@@ -13,10 +14,11 @@ import { MoreThanOrEqual } from "typeorm";
 import { ApiCriteria, ApiJfds, ApiPagination } from "src/docs/decorators";
 
 import { ActivityService } from "src/service";
-import { Authenticated } from "src/auth/decorators";
+import { Authenticated, AuthenticatedUser } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { Activity } from "./rest";
 import { ActivityMapper } from "./mapper";
+import { ActivityRoleType, Role, User } from "src/model";
 
 @Controller()
 @ApiTags("Resources")
@@ -72,7 +74,22 @@ export class ActivityController {
     operationId: "crupdateActivities",
     type: [Activity],
   })
-  async crupdateactivities(@Body() activities: Activity[]) {
+  async crupdateactivities(
+    @AuthenticatedUser() authenticatedUser: User,
+    @Body() activities: Activity[]
+  ) {
+    if (
+      activities.find(
+        (activity) =>
+          activity.roleType === ActivityRoleType.MANAGER &&
+          authenticatedUser.role !== Role.ADMIN
+      )
+    ) {
+      throw new ForbiddenException(
+        "Cannot create activity with type ALL if not manager"
+      );
+    }
+
     const mapped = await Promise.all(
       activities.map((activity) => this.activityMapper.toDomain(activity))
     );
@@ -83,6 +100,7 @@ export class ActivityController {
   }
 
   @Delete("/activities/:id")
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiJfds({
     operationId: "deleteActivityById",
     type: Activity,

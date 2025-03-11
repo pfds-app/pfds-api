@@ -5,9 +5,10 @@ import { Operation } from "src/model";
 import { OperationMapper } from "src/controller/mapper";
 import { OperationController } from "src/controller";
 import { OperationService } from "src/service";
+import { AuthModule } from "src/auth";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Operation])],
+  imports: [AuthModule, TypeOrmModule.forFeature([Operation])],
   controllers: [OperationController],
   providers: [OperationService, OperationMapper],
   exports: [OperationService, OperationMapper],

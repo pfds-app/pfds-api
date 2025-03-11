@@ -30,7 +30,7 @@ export class LedgerController {
 
   @Get("/ledgers")
   @ApiPagination()
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiCriteria(
     { name: "name", type: "string" },
     { name: "year", type: "number" },
@@ -61,6 +61,7 @@ export class LedgerController {
   }
 
   @Get("/ledgers/all/stats")
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiJfds({
     type: [LedgerStat],
     operationId: "getLedgerStats",
@@ -74,7 +75,7 @@ export class LedgerController {
   }
 
   @Get("/ledgers/:id")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiJfds({
     operationId: "getLedgerById",
     type: Ledger,

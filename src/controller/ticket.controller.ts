@@ -36,7 +36,7 @@ export class TicketController {
 
   @Get("/operations/results/all")
   @ApiPagination()
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiJfds({
     operationId: "getOperationResults",
     type: [OperationResult],
@@ -52,7 +52,7 @@ export class TicketController {
   }
 
   @Get("/operations/:operationId/staffs")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiJfds({
     operationId: "getAllOperationStaffs",
     type: [User],
@@ -63,7 +63,7 @@ export class TicketController {
   }
 
   @Get("/operations/:operationId/tickets/status")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiPagination()
   @ApiJfds({
     operationId: "getAllOperationTicketsStatus",
@@ -86,7 +86,7 @@ export class TicketController {
 
   @Get("/tickets")
   @ApiPagination()
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiJfds({
     operationId: "getTickets",
     type: [Ticket],
@@ -97,7 +97,7 @@ export class TicketController {
   }
 
   @Get("/tickets/:id")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiJfds({
     operationId: "getTicketById",
     type: Ticket,

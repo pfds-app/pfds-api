@@ -27,6 +27,7 @@ export class AssociationController {
 
   @Get("/associations")
   @ApiPagination()
+  @Authenticated()
   @ApiJfds({
     operationId: "getAssociations",
     type: [Association],
@@ -39,6 +40,7 @@ export class AssociationController {
   }
 
   @Get("/associations/:id")
+  @Authenticated()
   @ApiJfds({
     operationId: "getAssociationById",
     type: Association,

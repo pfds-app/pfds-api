@@ -21,3 +21,4 @@ export * from "./activity";
 export * from "./presence-status";
 export * from "./presence";
 export * from "./create-presence";
+export * from "./index";

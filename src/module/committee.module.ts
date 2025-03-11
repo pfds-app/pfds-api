@@ -5,9 +5,10 @@ import { Committee } from "src/model";
 import { CommitteeMapper } from "src/controller/mapper";
 import { CommitteeController } from "src/controller";
 import { CommitteeService } from "src/service";
+import { AuthModule } from "src/auth";
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Committee])],
+  imports: [AuthModule, TypeOrmModule.forFeature([Committee])],
   controllers: [CommitteeController],
   providers: [CommitteeService, CommitteeMapper],
   exports: [CommitteeService, CommitteeMapper],

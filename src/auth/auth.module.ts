@@ -7,7 +7,12 @@ import { ConfigService } from "@nestjs/config";
 import { AuthService } from "./auth.service";
 import { AuthController } from "./auth.controller";
 import { JwtStrategy } from "./startegy";
-import { JwtAuthGuard, RoleGuard } from "./guards";
+import {
+  JwtAuthGuard,
+  RoleGuard,
+  SelfMatcherGuard,
+  SelfRegionMatcherGuard,
+} from "./guards";
 import {
   Association,
   Committee,
@@ -51,8 +56,8 @@ import { UserValidator } from "src/service/validator/user.validator";
       },
     }),
     TypeOrmModule.forFeature([
-      Responsability,
       User,
+      Responsability,
       Association,
       Committee,
       Region,
@@ -78,7 +83,10 @@ import { UserValidator } from "src/service/validator/user.validator";
     SacramentService,
     SacramentMapper,
     RoleGuard,
+    SelfMatcherGuard,
+    SelfRegionMatcherGuard,
   ],
   controllers: [AuthController],
+  exports: [UserService],
 })
 export class AuthModule {}

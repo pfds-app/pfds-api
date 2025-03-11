@@ -28,6 +28,7 @@ export class CommitteeController {
 
   @Get("/committees")
   @ApiPagination()
+  @Authenticated()
   @ApiCriteria({ name: "name", type: "string" })
   @ApiJfds({
     operationId: "getCommittees",
@@ -46,6 +47,7 @@ export class CommitteeController {
   }
 
   @Get("/committees/:id")
+  @Authenticated()
   @ApiJfds({
     operationId: "getCommitteeById",
     type: Committee,

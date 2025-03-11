@@ -28,7 +28,7 @@ export class OperationController {
 
   @Get("/operations")
   @ApiPagination()
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiCriteria({ name: "name", type: "string" })
   @ApiJfds({
     operationId: "getOperations",
@@ -47,7 +47,7 @@ export class OperationController {
   }
 
   @Get("/operations/:id")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiJfds({
     operationId: "getOperationById",
     type: Operation,

@@ -2,6 +2,7 @@ import {
   Body,
   Controller,
   Delete,
+  ForbiddenException,
   Get,
   NotFoundException,
   Param,
@@ -26,19 +27,70 @@ import {
 } from "./rest";
 import { Role, UserGender, User as EntityUser, DeletedRole } from "src/model";
 import { UserStat } from "src/service/model";
-import { Criteria } from "src/service/utils/criteria";
-import { ILike } from "typeorm";
+import { ILike, Repository } from "typeorm";
+import { InjectRepository } from "@nestjs/typeorm";
+import { Count } from "./rest/count";
+import { UPDATED_AT_CREATED_AT_ORDER_BY } from "src/service/utils/default-order-by";
 
 @Controller()
 @ApiTags("Users")
 export class UserController {
   constructor(
     private readonly userService: UserService,
-    private readonly userMapper: UserMapper
+    private readonly userMapper: UserMapper,
+    @InjectRepository(EntityUser)
+    private readonly userRepository: Repository<EntityUser>
   ) {}
 
+  @Get("/users-member-count")
+  @Authenticated({
+    roles: [
+      Role.ADMIN,
+      Role.COMMITTEE_MANAGER,
+      Role.REGION_MANAGER,
+      Role.ASSOCIATION_MANAGER,
+    ],
+  })
+  @ApiJfds({
+    operationId: "getUserMemberCount",
+    type: Count,
+  })
+  async getUserMemberCount(
+    @AuthenticatedUser() user: EntityUser
+  ): Promise<Count> {
+    const users = await this.userRepository.find({
+      where: {
+        region: {
+          id: user?.role !== Role.ADMIN ? undefined : user?.region?.id,
+        },
+        association: {
+          id:
+            user?.role === Role.ADMIN || user?.role === Role.REGION_MANAGER
+              ? undefined
+              : user.association?.id,
+        },
+        committee: {
+          id:
+            user?.role === Role.ADMIN || user?.role === Role.REGION_MANAGER
+              ? undefined
+              : user.committee?.id,
+        },
+      },
+      order: UPDATED_AT_CREATED_AT_ORDER_BY,
+    });
+
+    return { value: users.length };
+  }
+
   @Get("/users")
-  @Authenticated()
+  @Authenticated({
+    roles: [
+      Role.ADMIN,
+      Role.REGION_MANAGER,
+      Role.ASSOCIATION_MANAGER,
+      Role.COMMITTEE_MANAGER,
+    ],
+  })
   @ApiPagination()
   @ApiCriteria(
     {
@@ -80,95 +132,52 @@ export class UserController {
     @Query("associationId") associationId?: string,
     @Query("gender") gender?: UserGender
   ) {
-    const isSuperAdmin = [Role.ADMIN, Role.REGION_MANAGER].includes(user.role);
-    let qFilters: Criteria<EntityUser> = [];
-    if (q) {
-      qFilters = [
-        {
-          firstName: ILike(`%${q}%`),
-          nic,
-          role,
-          apv,
-          gender,
-          username,
-          lastName,
-          region: {
-            id: user?.role === Role.ADMIN ? regionId : user.region?.id,
-          },
-          association: {
-            id: isSuperAdmin ? associationId : user.association?.id,
-          },
-          committee: {
-            id: isSuperAdmin ? committeeId : user.committee?.id,
-          },
-          responsability: {
-            id: responsabilityId,
-          },
-          sacrament: {
-            id: sacramentId,
-          },
-        },
-        {
-          lastName: ILike(`%${q}%`),
-          nic,
-          role,
-          apv,
-          gender,
-          username,
-          firstName,
-          region: {
-            id: user?.role === Role.ADMIN ? regionId : user.region?.id,
-          },
-          association: {
-            id: isSuperAdmin ? associationId : user.association?.id,
-          },
-          committee: {
-            id: isSuperAdmin ? committeeId : user.committee?.id,
-          },
-          responsability: {
-            id: responsabilityId,
-          },
-          sacrament: {
-            id: sacramentId,
-          },
-        },
-      ];
-    }
+    const isFindSimpleUser = role === Role.SIMPLE_USER;
+    const filter = {
+      nic,
+      apv,
+      gender,
+      username,
+      lastName,
+      firstName,
+      role: isFindSimpleUser ? undefined : role,
+      region: {
+        id: user.role === Role.ADMIN ? regionId : user.region?.id,
+      },
+      association: {
+        id:
+          user.role === Role.ADMIN || user.role === Role.REGION_MANAGER
+            ? associationId
+            : user.association.id,
+      },
+      committee: {
+        id:
+          user.role === Role.ADMIN || user.role === Role.REGION_MANAGER
+            ? committeeId
+            : user.committee.id,
+      },
+      responsability: {
+        id: responsabilityId,
+      },
+      sacrament: {
+        id: sacramentId,
+      },
+    };
 
     const users = await this.userService.findAll(
       pagination,
       q
-        ? qFilters
-        : {
-            nic,
-            role,
-            apv,
-            gender,
-            username,
-            lastName,
-            firstName,
-            region: {
-              id: user?.role === Role.ADMIN ? regionId : user.region?.id,
-            },
-            association: {
-              id: isSuperAdmin ? associationId : user.association?.id,
-            },
-            committee: {
-              id: isSuperAdmin ? committeeId : user.committee?.id,
-            },
-            responsability: {
-              id: responsabilityId,
-            },
-            sacrament: {
-              id: sacramentId,
-            },
-          }
+        ? [
+            { ...filter, firstName: ILike(`${q}%`) },
+            { ...filter, lastName: ILike(`${q}%`) },
+          ]
+        : filter
     );
-    return Promise.all(users.map((user) => this.userMapper.toRest(user)));
+    return Promise.all(users.map((el) => this.userMapper.toRest(el)));
   }
 
   @Get("/users/:id")
-  @Authenticated()
+  @Authenticated({ selfRegionMatcher: "id" })
   @ApiJfds({
     operationId: "getUserById",
     type: User,
@@ -182,7 +191,7 @@ export class UserController {
   }
 
   @Put("/users/:id/picture/raw")
-  @Authenticated()
+  @Authenticated({ selfMatcher: "id" })
   @FormDataRequest()
   @ApiConsumes("multipart/form-data")
   @ApiBody({
@@ -209,7 +218,8 @@ export class UserController {
     return this.userService.updateProfilePicture(id, profilePicture.file);
   }
 
-  @Put("/users/infos")
+  @Put("/users/:id/infos")
+  @Authenticated({ selfMatcher: "id", selfRegionMatcher: "id" })
   @ApiBody({
     type: UpdateUser,
   })
@@ -217,9 +227,16 @@ export class UserController {
     operationId: "updateUserInfo",
     type: User,
   })
-  async updateUser(@Body() updateUser: UpdateUser) {
+  async updateUser(
+    @Param("id") _id: string,
+    @AuthenticatedUser() authenticatedUser: EntityUser,
+    @Body() updateUser: UpdateUser
+  ) {
     const mappedUser = await this.userMapper.updateToDomain(updateUser);
-    const user = await this.userService.updateUserInfos(mappedUser);
+    const user = await this.userService.updateUserInfos(
+      authenticatedUser,
+      mappedUser
+    );
     return this.userMapper.toRest(user);
   }
 
@@ -232,8 +249,19 @@ export class UserController {
     operationId: "createUser",
     type: User,
   })
-  async createUser(@Body() createUser: CreateUser) {
+  async createUser(
+    @AuthenticatedUser() authenticatedUser: User,
+    @Body() createUser: CreateUser
+  ) {
+    const isAdmin = authenticatedUser.role === Role.ADMIN;
     const mappedUser = await this.userMapper.createToDomain(createUser);
+
+    if (!isAdmin && authenticatedUser.region !== mappedUser.region) {
+      throw new ForbiddenException(
+        "Should create only a user with the same region"
+      );
+    }
+
     const user = await this.userService.createUser(mappedUser);
     return this.userMapper.toRest(user);
   }
@@ -248,6 +276,7 @@ export class UserController {
     operationId: "getUserMembersStats",
     type: [UserStat],
   })
+  @Authenticated()
   async getUserCreatedStatByYear(
     @Query("fromDate") fromDate: string,
     @Query("endDate") endDate: string,
@@ -268,7 +297,14 @@ export class UserController {
   }
 
   @Get("/deleted-roles")
-  @Authenticated()
+  @Authenticated({
+    roles: [
+      Role.ADMIN,
+      Role.REGION_MANAGER,
+      Role.COMMITTEE_MANAGER,
+      Role.ASSOCIATION_MANAGER,
+    ],
+  })
   @ApiPagination()
   @ApiCriteria({
     name: "role",
@@ -292,16 +328,5 @@ export class UserController {
         user: this.userMapper.toRest(deletedRole.user),
       }))
     );
-  }
-
-  @Delete("/users/:id/role")
-  @Authenticated()
-  @ApiJfds({
-    operationId: "deleteUserRole",
-    type: DeletedRole,
-  })
-  async deleteUserRole(@Param("id") id: string) {
-    const user = await this.userService.deleteUserRole(id);
-    return this.userMapper.toRest(user);
   }
 }

@@ -19,7 +19,7 @@ export class PayedTicketController {
 
   @Get("/operation/:operationId/staffs/:staffId/payed-tickets")
   @ApiPagination()
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiJfds({
     operationId: "getPayedTickets",
     type: [PayedTicket],
@@ -45,7 +45,7 @@ export class PayedTicketController {
   }
 
   @Get("/operation/:operationId/tickets/:ticketNumber")
-  @Authenticated()
+  @Authenticated({ roles: [Role.ADMIN] })
   @ApiJfds({
     operationId: "getOperationTicketByTicketNumber",
     type: PayedTicket,
