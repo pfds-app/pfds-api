@@ -3,11 +3,11 @@ import { ApiBody, ApiTags } from "@nestjs/swagger";
 
 import { ApiCriteria, ApiJfds, ApiPagination } from "src/docs/decorators";
 import { PresenceService } from "src/service";
-import { Authenticated } from "src/auth/decorators";
+import { Authenticated, AuthenticatedUser } from "src/auth/decorators";
 import { Pagination, PaginationParams } from "./decorators";
 import { CreatePresence, Presence, PresenceStatus } from "./rest";
 import { PresenceMapper } from "./mapper";
-import { Role } from "src/model";
+import { Role, User } from "src/model";
 
 @Controller()
 @ApiTags("Resources")
@@ -26,11 +26,13 @@ export class PresenceController {
     type: [PresenceStatus],
   })
   async findAll(
+    @AuthenticatedUser() user: User,
     @Pagination() pagination: PaginationParams,
     @Param("activityId") activityId: string,
     @Query("isPresent") isPresent?: boolean
   ) {
     const presenceStatus = await this.presenceService.getPresenceStatus(
+      user,
       pagination,
       activityId,
       isPresent

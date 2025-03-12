@@ -93,17 +93,17 @@ export class UserMapper {
       id,
       sacrament: sacrament
         ? await this.sacramentMapper.toDomain(sacrament)
-        : undefined,
+        : null,
       responsability: responsability
         ? await this.responsabilityMapper.toDomain(responsability)
-        : undefined,
+        : null,
       committee: committee
         ? await this.committeeMapper.toDomain(committee)
-        : undefined,
-      region: region ? await this.regionMapper.toDomain(region) : undefined,
+        : null,
+      region: region ? await this.regionMapper.toDomain(region) : null,
       association: association
         ? await this.associationMapper.toDomain(association)
-        : undefined,
+        : null,
       password: beforeUpdateEntityUser.password,
       photo: beforeUpdateEntityUser.photo,
       ...baseEntityUser,
@@ -148,17 +148,17 @@ export class UserMapper {
       ...baseEntityUser,
       sacrament: sacrament
         ? await this.sacramentMapper.toDomain(sacrament)
-        : undefined,
+        : null,
       responsability: responsability
         ? await this.responsabilityMapper.toDomain(responsability)
-        : undefined,
+        : null,
       committee: committee
         ? await this.committeeMapper.toDomain(committee)
-        : undefined,
-      region: region ? await this.regionMapper.toDomain(region) : undefined,
+        : null,
+      region: region ? await this.regionMapper.toDomain(region) : null,
       association: association
         ? await this.associationMapper.toDomain(association)
-        : undefined,
+        : null,
     });
   }
 }

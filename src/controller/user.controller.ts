@@ -76,14 +76,7 @@ export class UserController {
   }
 
   @Get("/users")
-  @Authenticated({
-    roles: [
-      Role.ADMIN,
-      Role.REGION_MANAGER,
-      Role.ASSOCIATION_MANAGER,
-      Role.COMMITTEE_MANAGER,
-    ],
-  })
+  @Authenticated()
   @ApiPagination()
   @ApiCriteria(
     {
@@ -298,14 +291,7 @@ export class UserController {
   }
 
   @Get("/deleted-roles")
-  @Authenticated({
-    roles: [
-      Role.ADMIN,
-      Role.REGION_MANAGER,
-      Role.COMMITTEE_MANAGER,
-      Role.ASSOCIATION_MANAGER,
-    ],
-  })
+  @Authenticated()
   @ApiPagination()
   @ApiCriteria({
     name: "role",

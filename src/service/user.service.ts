@@ -141,7 +141,7 @@ export class UserService {
 
     try {
       return this.datasource.transaction(async (entityManager) => {
-        if (isRoleUpdated && user.role !== Role.SIMPLE_USER) {
+        if (isRoleUpdated && beforeUpdate.role !== Role.SIMPLE_USER) {
           const toSave = entityManager.create(DeletedRole, {
             id: uuid(),
             role: beforeUpdate.role,

@@ -24,6 +24,7 @@ export class PresenceService {
   ) {}
 
   async getPresenceStatus(
+    connectedUser: User,
     pagination: PaginationParams,
     activityId: string,
     getIsPresent?: boolean
@@ -44,13 +45,41 @@ export class PresenceService {
     });
 
     const isForAll = activity.roleType === ActivityRoleType.ALL;
+    const BaseFilter = {
+      region: {
+        id:
+          connectedUser?.role === Role.ADMIN
+            ? undefined
+            : connectedUser.region?.id,
+      },
+      association: {
+        id:
+          connectedUser.role === Role.ADMIN ||
+          connectedUser.role === Role.REGION_MANAGER
+            ? undefined
+            : connectedUser.role === Role.SIMPLE_USER ||
+                connectedUser.role === Role.ASSOCIATION_MANAGER
+              ? connectedUser.association?.id
+              : undefined,
+      },
+      committee: {
+        id:
+          connectedUser.role === Role.ADMIN ||
+          connectedUser.role === Role.REGION_MANAGER
+            ? undefined
+            : connectedUser.role === Role.SIMPLE_USER ||
+                connectedUser.role === Role.COMMITTEE_MANAGER
+              ? connectedUser.committee?.id
+              : undefined,
+      },
+    };
     const filter = isForAll
-      ? undefined
+      ? BaseFilter
       : [
-          { role: Role.ADMIN },
-          { role: Role.COMMITTEE_MANAGER },
-          { role: Role.ASSOCIATION_MANAGER },
-          { role: Role.REGION_MANAGER },
+          { role: Role.ADMIN, ...BaseFilter },
+          { role: Role.COMMITTEE_MANAGER, ...BaseFilter },
+          { role: Role.ASSOCIATION_MANAGER, ...BaseFilter },
+          { role: Role.REGION_MANAGER, ...BaseFilter },
         ];
     const users = await this.userRepository.find({
       where: filter,
