@@ -310,9 +310,9 @@ export class UserController {
       role,
     });
     return Promise.all(
-      deletedRoles.map((deletedRole) => ({
+      deletedRoles.map(async (deletedRole) => ({
         ...deletedRole,
-        user: this.userMapper.toRest(deletedRole.user),
+        user: await this.userMapper.toRest(deletedRole.user),
       }))
     );
   }
